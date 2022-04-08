@@ -22,8 +22,10 @@ RUN npm config set registry https://mirrors.cloud.tencent.com/npm/
 # 安装开发期依赖
 COPY package.json /app
 RUN npm install
+
+# 将当前目录（dockerfile所在目录）下所有文件都拷贝到工作目录下
+COPY . /app
 # 构建项目
-COPY . .
 RUN npm run build
 # 删除开发期依赖
 # RUN rm -rf node_modules && rm package-lock.json    
