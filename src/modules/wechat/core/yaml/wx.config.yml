@@ -1,0 +1,8 @@
+wxMenu:
+  create: https://api.weixin.qq.com/cgi-bin/menu/create?access_token={0}
+  selfMenu: https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token={0}
+  delete: https://api.weixin.qq.com/cgi-bin/menu/delete?access_token={0}
+  addconditional: https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token={0}
+  get: https://api.weixin.qq.com/cgi-bin/menu/get?access_token={0}
+
+accToken: https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}
