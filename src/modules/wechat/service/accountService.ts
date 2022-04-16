@@ -5,7 +5,9 @@ import { Repository } from 'typeorm';
 import { WXAccount } from '../entities/account';
 import * as _ from 'lodash';
 import { Context } from '@midwayjs/koa';
-
+import { Validate } from '@midwayjs/validate';
+import { MenuCore } from './../core/yaml';
+import { Format } from './../../../global/comm/format';
 /**
  * 微信公众号账号
  */
@@ -16,6 +18,13 @@ export class WXAccountService extends BaseService {
 
   @Inject()
   ctx: Context;
+
+  menuCore: MenuCore = new MenuCore({
+    fileName: 'wx.config.yml',
+    filePath: './',
+  });
+
+  format: Format = new Format();
 
   /**
    * 更新appSecret
@@ -34,18 +43,22 @@ export class WXAccountService extends BaseService {
 
   /**
    * 新增公众号
-   * @param param
+   * @param account WXAccount
    */
-  async add(param: WXAccount) {
+  @Validate()
+  async add(account: WXAccount) {
+    const accToken = await this.menuCore.get('accToken');
+    return this.format.formatString(accToken, 'aaaaaasddadasd', '44444444444');
+    // const checkV = await this.captchaCheck(captchaId, verifyCode);
     const exists = await this.wxAccount.findOne({
-      appSecret: param.appSecret,
-      appId: param.appId,
+      appSecret: account.appSecret,
+      appId: account.appId,
     });
     if (!_.isEmpty(exists)) {
       throw new CoolCommException('用户名已经存在~');
     }
-    await this.wxAccount.save(param);
-    return param.id;
+    await this.wxAccount.save(account);
+    return account.id;
   }
 
   async delete(ids: string | number[]) {

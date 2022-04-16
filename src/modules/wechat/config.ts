@@ -1,4 +1,5 @@
 import { LogMiddleware } from './middleware/LogMiddleware';
+import { SwaggerMiddleware } from './middleware/SwaggerMiddleware';
 // import { BaseAuthorityMiddleware } from './middleware/authority';
 import { ModuleConfig } from '@cool-midway/core';
 
@@ -12,7 +13,7 @@ export default () => {
     // 模块描述
     description: '基础的权限管理功能，包括登录，权限校验',
     // 中间件
-    globalMiddlewares: [LogMiddleware], //BaseAuthorityMiddleware
+    globalMiddlewares: [LogMiddleware, SwaggerMiddleware], //BaseAuthorityMiddleware
     // jwt 生成解密token的
     jwt: {
       // 单点登录

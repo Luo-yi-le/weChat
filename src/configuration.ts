@@ -9,6 +9,7 @@ import * as orm from '@midwayjs/orm';
 import * as cool from '@cool-midway/core';
 import * as file from '@cool-midway/file';
 import * as localTask from '@midwayjs/task';
+import * as swagger from '@midwayjs/swagger';
 // import * as socketio from '@midwayjs/socketio';
 // import * as task from '@cool-midway/task';
 // import * as pay from '@cool-midway/pay';
@@ -35,6 +36,8 @@ import * as localTask from '@midwayjs/task';
     cool,
     // 文件上传 阿里云存储 腾讯云存储 七牛云存储
     file,
+
+    swagger,
     // 任务与队列
     // task,
     // 支付 微信与支付宝

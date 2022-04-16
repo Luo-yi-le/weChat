@@ -1,5 +1,6 @@
 import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
+import { BaseEntitySubscriber } from './../global/subscriber/baseEntitySubscriber';
 
 /**
  * 本地开发 npm run dev 读取的配置文件
@@ -14,6 +15,7 @@ export default {
     database: 'cool',
     // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
     synchronize: true,
+    subscribers: [],
     // 打印日志
     logging: true,
     // 字符集
