@@ -22,9 +22,11 @@ export class WXAccountService extends BaseService {
   menuCore: MenuCore = new MenuCore({
     fileName: 'wx.config.yml',
     filePath: './',
+    encoding: 'utf8',
   });
 
-  format: Format = new Format();
+  @Inject()
+  format: Format;
 
   /**
    * 更新appSecret
@@ -47,15 +49,15 @@ export class WXAccountService extends BaseService {
    */
   @Validate()
   async add(account: WXAccount) {
-    const accToken = await this.menuCore.get('accToken');
-    return this.format.formatString(accToken, 'aaaaaasddadasd', '44444444444');
-    // const checkV = await this.captchaCheck(captchaId, verifyCode);
+    // const accToken = await this.menuCore.get('accToken');
+    // return this.format.formatString(accToken, 'aaaaaasddadasd', '44444444444');
     const exists = await this.wxAccount.findOne({
       appSecret: account.appSecret,
       appId: account.appId,
+      originalId: account.originalId,
     });
     if (!_.isEmpty(exists)) {
-      throw new CoolCommException('用户名已经存在~');
+      throw new CoolCommException('公众号[' + account.name + ']已经存在~');
     }
     await this.wxAccount.save(account);
     return account.id;

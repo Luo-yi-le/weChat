@@ -1,15 +1,21 @@
+import { Provide, Inject } from '@midwayjs/decorator';
 import * as Yaml from 'yaml';
 import * as fs from 'fs';
 import { join } from 'path';
+
+@Provide()
 export class MenuCore {
   WxMenuApi: WxMenu | any;
   filePath = './../yaml/wx.config.yml';
-  encoding = 'utf8';
-  accToken = '';
+
+  encoding: BufferEncoding;
+
+  accToken: any;
+
   constructor(option?: MenuOptions) {
     this.filePath =
       join(__dirname, option.filePath + option.fileName) || this.filePath;
-    this.encoding = option.encoding || this.encoding;
+    this.encoding = option.encoding || 'utf8';
   }
 
   /**
@@ -20,7 +26,7 @@ export class MenuCore {
   async get(key: string): Promise<string | any> {
     return new Promise((resolve, reject) => {
       try {
-        const yYaml = fs.readFileSync(this.filePath, 'utf8');
+        const yYaml = fs.readFileSync(this.filePath, this.encoding);
         const yml = Yaml.parse(yYaml);
         if (yml && yml[key]) {
           resolve(yml[key]);
@@ -31,6 +37,12 @@ export class MenuCore {
         reject(error);
       }
     });
+  }
+
+  async setConfig(config: MenuOptions) {
+    this.filePath =
+      join(__dirname, config.filePath + config.fileName) || this.filePath;
+    this.encoding = config.encoding || 'utf8';
   }
 
   /**
@@ -73,9 +85,9 @@ export class MenuCore {
 }
 
 interface MenuOptions {
-  filePath?: string;
-  fileName?: string;
-  encoding?: BufferEncoding;
+  filePath: string;
+  fileName: string;
+  encoding: BufferEncoding;
 }
 type BufferEncoding =
   | 'ascii'

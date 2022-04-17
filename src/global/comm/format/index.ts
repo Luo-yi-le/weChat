@@ -1,3 +1,4 @@
+import { Provide } from '@midwayjs/decorator';
 import LocalizedStrings, { LocalizedStringsMethods } from 'localized-strings';
 type IStrings = LocalizedStringsMethods;
 type Formatted = number | string;
@@ -6,6 +7,7 @@ type T = Formatted;
 /**
  * 格式化类
  */
+@Provide()
 export class Format {
   /**
    * 占位符替换

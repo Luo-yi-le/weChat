@@ -1,12 +1,4 @@
-import {
-  ALL,
-  Body,
-  Get,
-  Inject,
-  Post,
-  Provide,
-  Query,
-} from '@midwayjs/decorator';
+import { ALL, Body, Inject, Post, Provide } from '@midwayjs/decorator';
 import { BaseController, CoolController } from '@cool-midway/core';
 import { WXAccount } from '../../entities/account';
 import { WXAccountService } from '../../service/accountService';
