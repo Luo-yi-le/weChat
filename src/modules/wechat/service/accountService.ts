@@ -57,7 +57,7 @@ export class WXAccountService extends BaseService {
       originalId: account.originalId,
     });
     if (!_.isEmpty(exists)) {
-      throw new CoolCommException('公众号[' + account.name + ']已经存在~');
+      return '公众号[' + account.name + ']已经存在~';
     }
     await this.wxAccount.save(account);
     return account.id;

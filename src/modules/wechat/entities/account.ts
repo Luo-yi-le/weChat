@@ -1,13 +1,11 @@
 import { Column, Index, Generated, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from './../../../global/entity/baseEntity';
-import { Rule, RuleType } from '@midwayjs/validate';
+import { RuleType } from '@midwayjs/validate';
+import { columnRule } from './../../../global/comm/Rule';
+import { Rule, ColumnRule } from './../../../annotation/Rule';
 
-function error(err) {
-  console.log(err);
-  return new Error(err + ':' + '不能为空');
-}
-
+ColumnRule.Required('any');
 /**
  * 微信公众号账号
  */
@@ -16,33 +14,26 @@ export class WXAccount extends BaseEntity {
   @Column({ comment: '用户token', default: '' })
   accessToken: string;
 
-  @Rule(
-    RuleType.string()
-      .required()
-      .error(err => new Error('公众号App-Secret不能为空'))
-  )
+  @Rule(ColumnRule.Required('string', true, '公众号App-Secret不能为空'))
   @Column({ comment: '公众号App-Secret' })
   appSecret: string;
 
   @Rule(
-    RuleType.string()
-      .required()
-      .error(err => new Error('accountWeixin 公众号微信号不能为空'))
+    ColumnRule.Required('string', true, 'accountWeixin公众号微信号不能为空')
   )
-  @Rule(RuleType.string().required())
   @Column({ comment: '公众号微信号' })
   accountWeixin: string;
 
-  @Rule(RuleType.string().required())
+  @Rule(ColumnRule.Required('string', true, 'appId 微信公众账号原始ID'))
   @Column({ comment: '微信公众账号原始ID' })
   appId: string;
 
-  @Rule(RuleType.string().required())
+  @Rule(RuleType.string(), { required: false })
   @Column({ comment: '公众号类型，1－服务号，2－订阅号，3－企业号' })
   accountType: string;
 
-  @Rule(RuleType.string().required(), { required: false })
-  @Column({ comment: ' 描述' })
+  @Rule(RuleType.string())
+  @Column({ comment: ' 描述', default: '' })
   accountDesc: string;
 
   @Rule(RuleType.string().required())
