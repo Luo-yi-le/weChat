@@ -1,4 +1,5 @@
 import { Configuration, App } from '@midwayjs/decorator';
+import { IMidwayContainer, ILifeCycle } from '@midwayjs/core'
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
@@ -10,6 +11,8 @@ import * as cool from '@cool-midway/core';
 import * as file from '@cool-midway/file';
 import * as localTask from '@midwayjs/task';
 import * as swagger from '@midwayjs/swagger';
+const sha1 = require("sha1")
+// import sha1 from 'sha1';
 // import * as socketio from '@midwayjs/socketio';
 // import * as task from '@cool-midway/task';
 // import * as pay from '@cool-midway/pay';
@@ -53,9 +56,15 @@ import * as swagger from '@midwayjs/swagger';
   ],
   importConfigs: [join(__dirname, './config')],
 })
-export class ContainerLifeCycle {
+export class ContainerLifeCycle implements ILifeCycle {
   @App()
   app: koa.Application;
 
-  async onReady() {}
+  async onReady(container?: IMidwayContainer) {
+    // console.log(333333,container)
+  }
+
+  // 应用停止
+  async onStop() { }
 }
+

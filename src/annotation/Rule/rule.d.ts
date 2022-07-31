@@ -10,7 +10,7 @@ export declare function Rule(
 ): (...args: any[]) => void;
 export { joi as RuleType };
 
-export declare type Types =
+export declare type Types  =
   | 'any'
   | 'alternatives'
   | 'array'
