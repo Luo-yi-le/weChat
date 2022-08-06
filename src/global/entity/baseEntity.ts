@@ -15,7 +15,7 @@ import { baseError } from './../../global/comm/Error';
  */
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Rule(
     RuleType.string()
@@ -23,21 +23,21 @@ export abstract class BaseEntity {
       .error(err => new Error('name不能为空'))
   )
   @Column({ comment: '别名' })
-  name: string;
+  name?: string;
 
   @CreateDateColumn({
     nullable: false,
     comment: '创建时间',
     type: 'timestamp',
   })
-  createTime: Date;
+  createTime?: Date;
 
   @UpdateDateColumn({
     nullable: false,
     comment: '更改时间',
     type: 'timestamp',
   })
-  updateTime: Date;
+  updateTime?: Date;
 
   // @BeforeInsert()
   // createTimes() {

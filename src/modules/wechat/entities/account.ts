@@ -1,11 +1,8 @@
 import { Column, Index, Generated, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from './../../../global/entity/baseEntity';
-import { RuleType } from '@midwayjs/validate';
-import { columnRule } from './../../../global/comm/Rule';
 import { Rule, ColumnRule } from './../../../annotation/Rule';
 
-ColumnRule.Required('any');
 /**
  * 微信公众号账号
  */

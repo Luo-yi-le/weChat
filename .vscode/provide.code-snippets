@@ -1,0 +1,18 @@
+{
+  "service": {
+    "prefix": "provide",
+    "body": [
+      "import { Provide } from '@midwayjs/decorator';",
+      "import { BaseService } from '@cool-midway/core';",
+      "",
+      "/**",
+      " * 描述",
+      " */",
+      "@Provide()",
+      "export class ${TM_FILENAME_BASE} extends BaseService {",
+      "}",
+      ""
+    ],
+    "description": "Provide代码片段"
+  }
+}

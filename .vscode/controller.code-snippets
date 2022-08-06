@@ -16,6 +16,6 @@
       "export class XxxController extends BaseController {}",
       ""
     ],
-    "description": "cool-admin controller代码片段"
+    "description": "controller代码片段"
   }
 }

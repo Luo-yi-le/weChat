@@ -1,11 +1,23 @@
-import { Controller, Get, Post, Inject, Query } from '@midwayjs/decorator';
+import {
+  Controller,
+  Get,
+  Post,
+  Inject,
+  Query,
+  Logger,
+} from '@midwayjs/decorator';
 import { Context } from '@midwayjs/koa';
-const sha1 = require('sha1')
+import { ILogger } from '@midwayjs/logger';
+
+const sha1 = require('sha1');
 /**
  * 欢迎界面
  */
 @Controller('/')
 export class WelcomeController {
+  @Logger()
+  logger: ILogger;
+
   @Inject()
   ctx: Context;
 
@@ -22,24 +34,22 @@ export class WelcomeController {
     @Query('signature') signature: string,
     @Query('nonce') nonce: string,
     @Query('timestamp') timestamp: string,
-    @Query('echostr') echostr: string) {
-    var config = {
+    @Query('echostr') echostr: string
+  ) {
+    let config = {
       wechat: {
         appID: 'wx14d4e0686278afb6',
         appSecret: 'e7c20c8348c91d1b160d983a31bde0e8',
-        token: 'wulingshan'
-
-      }
-    }
-    const token = config.wechat.token
-    const str = [token, timestamp, nonce].sort().join('')
-    const sha = sha1(str)
-    console.log(333333, sha)
+        token: 'wulingshan',
+      },
+    };
+    const token = config.wechat.token;
+    const str = [token, timestamp, nonce].sort().join('');
+    const sha = sha1(str);
     if (sha === signature) {
-      this.ctx.body = echostr + ''
-    }
-    else {
-      this.ctx.body = 'wrong'
+      this.ctx.body = echostr + '';
+    } else {
+      this.ctx.body = 'wrong';
     }
   }
 }

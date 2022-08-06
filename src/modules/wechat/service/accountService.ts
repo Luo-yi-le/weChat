@@ -6,8 +6,7 @@ import { WXAccount } from '../entities/account';
 import * as _ from 'lodash';
 import { Context } from '@midwayjs/koa';
 import { Validate } from '@midwayjs/validate';
-import { MenuCore } from './../core/yaml';
-import { Format } from './../../../global/comm/format';
+import { YAML } from './../core/yaml';
 /**
  * 微信公众号账号
  */
@@ -19,14 +18,11 @@ export class WXAccountService extends BaseService {
   @Inject()
   ctx: Context;
 
-  menuCore: MenuCore = new MenuCore({
+  yaml: YAML = new YAML({
     fileName: 'wx.config.yml',
     filePath: './',
     encoding: 'utf8',
   });
-
-  @Inject()
-  format: Format;
 
   /**
    * 更新appSecret
@@ -49,8 +45,7 @@ export class WXAccountService extends BaseService {
    */
   @Validate()
   async add(account: WXAccount) {
-    // const accToken = await this.menuCore.get('accToken');
-    // return this.format.formatString(accToken, 'aaaaaasddadasd', '44444444444');
+    // return await this.yaml.get('accToken', 'aaaaaasddadasd', '44444444444');
     const exists = await this.wxAccount.findOne({
       appSecret: account.appSecret,
       appId: account.appId,

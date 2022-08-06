@@ -8,10 +8,10 @@ import { BaseEntitySubscriber } from './../global/subscriber/baseEntitySubscribe
 export default {
   orm: {
     type: 'mysql',
-    host: '127.0.0.1',
+    host: '175.27.158.145',
     port: 3306,
-    username: 'root',
-    password: '123456',
+    username: 'admin2',
+    password: '153759.Ljx',
     database: 'cool',
     // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
     synchronize: true,
@@ -24,5 +24,11 @@ export default {
   cool: {
     // 是否自动导入数据库
     initDB: true,
+    redis: {
+      host: '127.0.0.1',
+      port: 6379,
+      password: '',
+      db: 1,
+    },
   } as CoolConfig,
 } as MidwayConfig;

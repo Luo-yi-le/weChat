@@ -6,3 +6,7 @@ wxMenu:
   get: https://api.weixin.qq.com/cgi-bin/menu/get?access_token={0}
 
 accToken: https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}
+
+wxAppID: wx14d4e0686278afb6
+wxAppSecret: e7c20c8348c91d1b160d983a31bde0e8
+wxToken: wulingshan

@@ -1,14 +1,21 @@
 import { CoolConfig } from '@cool-midway/core';
 import { MODETYPE } from '@cool-midway/file';
 import { MidwayConfig } from '@midwayjs/core';
-// import * as redisStore from 'cache-manager-ioredis';
+import * as redisStore from 'cache-manager-ioredis';
 import * as fsStore from 'cache-manager-fs-hash';
 
 export default {
   // 修改成你自己独有的key
-  keys: 'cool-admin for node',
+  keys: 'wulingshan',
   koa: {
     port: 8001,
+  },
+  bodyParser: {
+    enableTypes: ['json', 'form', 'text', 'xml'],
+    formLimit: '1mb',
+    jsonLimit: '1mb',
+    textLimit: '1mb',
+    xmlLimit: '1mb',
   },
   // 文件上传
   upload: {
@@ -29,15 +36,17 @@ export default {
     },
   },
   // redis缓存
-  //   cache: {
-  //     store: redisStore,
-  //     options: {
-  //       host: '127.0.0.1',
-  //       port: 6379,
-  //       password: '',
-  //       db: 1,
-  //     },
+  // cache: {
+  //   store: redisStore,
+  //   options: {
+  //     host: '127.0.0.1',
+  //     port: 6379,
+  //     password: '',
+  //     db: 1,
+  //     keyPrefix: 'cache:',
+  //     ttl: 100,
   //   },
+  // },
   // cool配置
   cool: {
     // 是否自动导入数据库

@@ -20,7 +20,7 @@ export class Format {
     ...values: (T | FormatObject<T>)[]
   ): Array<string | T> | string {
     const localizedStrings: IStrings = new LocalizedStrings({ en: {} });
-    console.log(localizedStrings.formatString(str, ...values).toString());
+    // console.log(localizedStrings.formatString(str, ...values).toString());
     return localizedStrings.formatString(str, ...values).toString();
   }
 }

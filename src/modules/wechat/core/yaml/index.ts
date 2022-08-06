@@ -2,9 +2,20 @@ import { Provide, Inject } from '@midwayjs/decorator';
 import * as Yaml from 'yaml';
 import * as fs from 'fs';
 import { join } from 'path';
+import { Format } from './../../../../global/comm/format';
 
+type Formatted = number | string;
+type FormatObject<U extends Formatted> = { [key: string]: U };
+type T = Formatted;
+
+/**
+ * yml配置
+ */
 @Provide()
-export class MenuCore {
+export class YAML {
+  @Inject()
+  format: Format;
+
   WxMenuApi: WxMenu | any;
   filePath = './../yaml/wx.config.yml';
 
@@ -23,7 +34,16 @@ export class MenuCore {
    * @param key
    * @returns Promise
    */
-  async get(key: string): Promise<string | any> {
+  async get(
+    key: string,
+    ...values: (T | FormatObject<T>)[]
+  ): Promise<string | any> {
+    const yml = await this.value(key);
+    const res = this.format.formatString(yml[key], ...values);
+    return res;
+  }
+
+  public async value(key: string) {
     return new Promise((resolve, reject) => {
       try {
         const yYaml = fs.readFileSync(this.filePath, this.encoding);
