@@ -6,7 +6,7 @@ import { WXAccount } from '../entities/account';
 import * as _ from 'lodash';
 import { Context } from '@midwayjs/koa';
 import { Validate } from '@midwayjs/validate';
-import { YAML } from './../core/yaml';
+
 /**
  * 微信公众号账号
  */
@@ -17,12 +17,6 @@ export class WXAccountService extends BaseService {
 
   @Inject()
   ctx: Context;
-
-  yaml: YAML = new YAML({
-    fileName: 'wx.config.yml',
-    filePath: './',
-    encoding: 'utf8',
-  });
 
   /**
    * 更新appSecret
@@ -40,12 +34,28 @@ export class WXAccountService extends BaseService {
   }
 
   /**
+   * 更新updateAccessToken
+   */
+  public async updateAccessToken(param: WXAccount) {
+    // eslint-disable-next-line prettier/prettier
+    const account = await this.wxAccount.findOne({ appSecret: param.appSecret });
+    if (!account) {
+      throw new CoolCommException('公众号不存在');
+    }
+    await this.wxAccount.save(param);
+  }
+
+  public async getAccessToken(appSecret: string) {
+    const account = await this.wxAccount.findOne({ appSecret });
+    return account;
+  }
+
+  /**
    * 新增公众号
    * @param account WXAccount
    */
   @Validate()
   async add(account: WXAccount) {
-    // return await this.yaml.get('accToken', 'aaaaaasddadasd', '44444444444');
     const exists = await this.wxAccount.findOne({
       appSecret: account.appSecret,
       appId: account.appId,

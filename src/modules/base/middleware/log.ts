@@ -1,19 +1,32 @@
-import { Middleware } from '@midwayjs/decorator';
+import { Middleware, Config } from '@midwayjs/decorator';
 import * as _ from 'lodash';
 import { NextFunction, Context } from '@midwayjs/koa';
 import { IMiddleware } from '@midwayjs/core';
 import { BaseSysLogService } from '../service/sys/log';
+import * as jwt from 'jsonwebtoken';
 
 /**
  * 日志中间件
  */
 @Middleware()
 export class BaseLogMiddleware implements IMiddleware<Context, NextFunction> {
+  @Config('module.base')
+  jwtConfig;
+
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
+      const { url } = ctx;
       const baseSysLogService = await ctx.requestContext.getAsync(
         BaseSysLogService
       );
+      const token = ctx.get('Authorization');
+      ctx.admin = jwt.verify(token, this.jwtConfig.jwt.secret);
+      if (url.includes('/interaction/')) {
+        ctx.admin = {
+          userId: '2',
+          name: '微信登录用户',
+        };
+      }
       baseSysLogService.record(
         ctx,
         ctx.url.split('?')[0],
@@ -22,5 +35,12 @@ export class BaseLogMiddleware implements IMiddleware<Context, NextFunction> {
       );
       await next();
     };
+  }
+  ignore(ctx: Context): boolean {
+    // 下面的路由将忽略此中间件
+    return (
+      ctx.path === '/admin/base/sys/log/page' ||
+      ctx.path.includes('/swagger-ui/')
+    );
   }
 }

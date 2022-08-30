@@ -2,7 +2,10 @@ import { Provide } from '@midwayjs/decorator';
 
 import { parseString, parseStringPromise } from 'xml2js';
 import type { convertableToString, ParserOptions } from 'xml2js';
-import { WX_MESSAGE_TYPE } from '../../../../global/enum/wxEnum';
+import {
+  WX_MESSAGE_TYPE,
+  WX_MESSAGE_EVENT,
+} from '../../../../global/enum/wxEnum';
 /**
  * xml处理
  */
@@ -39,7 +42,7 @@ export interface XML {
   xml?: Context;
 }
 
-interface Context {
+export interface Context {
   [x: string]: any;
   ToUserName?: string | any;
   FromUserName?: string | any;
@@ -47,4 +50,7 @@ interface Context {
   MsgType?: WX_MESSAGE_TYPE;
   Content?: string | any;
   MsgId?: string | any;
+  Event?: WX_MESSAGE_EVENT;
+  EventKey?: string | any;
+  Ticket?: string | any;
 }

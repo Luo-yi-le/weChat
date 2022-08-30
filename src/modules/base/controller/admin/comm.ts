@@ -6,6 +6,7 @@ import { BaseSysPermsService } from '../../service/sys/perms';
 import { BaseSysUserService } from '../../service/sys/user';
 import { Context } from '@midwayjs/koa';
 import { CoolFile } from '@cool-midway/file';
+import { BaseSysRoleService } from '../../service/sys/role';
 
 /**
  * Base 通用接口 一般写不需要权限过滤的接口
@@ -19,6 +20,8 @@ export class BaseCommController extends BaseController {
   @Inject()
   baseSysPermsService: BaseSysPermsService;
 
+  @Inject()
+  baseSysRoleService: BaseSysRoleService;
   @Inject()
   baseSysLoginService: BaseSysLoginService;
 
@@ -34,6 +37,19 @@ export class BaseCommController extends BaseController {
   @Get('/person', { summary: '个人信息' })
   async person() {
     return this.ok(await this.baseSysUserService.person());
+  }
+
+  /**
+   * 获得个人信息
+   */
+  @Get('/info', { summary: '个人信息与权限' })
+  async info() {
+    const person = await this.baseSysUserService.person();
+    const permmenu = await this.baseSysPermsService.permmenu(
+      this.ctx.admin.roleIds
+    );
+    const info: any = await this.baseSysRoleService.info(this.ctx.admin.userId);
+    return this.ok({ person, permmenu, info, ctx: this.ctx.admin });
   }
 
   /**

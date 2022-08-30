@@ -48,6 +48,14 @@ export class BaseSysRoleService extends BaseService {
   }
 
   /**
+   * 根据用户ID获得所有用户角色信息
+   * @param userId
+   */
+  async getByUserRole(userId: number): Promise<any[]> {
+    const userRole = (await this.baseSysUserRoleEntity.find({ userId })) || [];
+    return userRole;
+  }
+  /**
    *
    * @param param
    */

@@ -8,7 +8,7 @@ import { MessageService } from '../../service/MessageService';
  */
 @Provide()
 @CoolController({
-  api: ['list'],
+  api: ['list', 'page'],
   entity: WXMessageEntity,
   service: MessageService,
 })

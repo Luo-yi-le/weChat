@@ -41,3 +41,8 @@ $ yarn stop
 - 使用 `yarn run lint:fix` 用来格式代码。
 - 使用 `yarn run lint` 来做代码风格检查。
 - 使用 `yarn test` 来执行单元测试。
+
+
+### 启动redis
+- redis-server.exe
+- redis-cli.exe -h 127.0.0.1 -p 6379

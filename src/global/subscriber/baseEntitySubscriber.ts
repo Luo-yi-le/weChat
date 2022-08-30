@@ -2,12 +2,14 @@ import {
   EventSubscriber,
   EntitySubscriberInterface,
   InsertEvent,
+  UpdateEvent,
 } from 'typeorm';
+import { EventSubscriberModel } from '@midwayjs/orm';
 import { BaseEntity } from './../entity/baseEntity';
 /**
  * 订阅者
  */
-@EventSubscriber()
+@EventSubscriberModel()
 export class BaseEntitySubscriber
   implements EntitySubscriberInterface<BaseEntity>
 {
@@ -19,7 +21,7 @@ export class BaseEntitySubscriber
     event.entity.updateTime = new Date();
   }
 
-  async afterInsert(event: InsertEvent<BaseEntity>) {
-    console.log(event);
+  async beforeUpdate(event: UpdateEvent<BaseEntity>) {
+    event.entity.updateTime = new Date();
   }
 }

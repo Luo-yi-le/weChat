@@ -1,333 +1,166 @@
-import { Provide, Inject } from '@midwayjs/decorator';
-import { WeChatUtil } from './util';
-import urllib = require('urllib');
-import { YAML } from './../core/yaml';
-import { URL } from 'url';
-import { WeChatCommon } from './common';
-/**
- * WeChatAPI，基础文件，主要用于Token的处理和mixin机制
- */
+import { Provide, Inject, Logger } from '@midwayjs/decorator';
+import { HttpService } from '@midwayjs/axios';
+import { ILogger } from '@midwayjs/logger';
+import {
+  GetAccessTokenInfo,
+  GetUserInfo,
+  IReslut,
+} from './../../../global/types/weChat';
+import { CacheManager } from '@midwayjs/cache';
+import { wxUtil } from './util';
+import { Button } from './../entities/button';
+// import _ = require('lodash');
+
 @Provide()
 export class WeChatAPI {
   @Inject()
-  util: WeChatUtil;
+  httpService: HttpService;
 
-  expireTime: number;
-  endpoint: string;
-  defaults: any;
-  appid: string;
-  appsecret: string;
-  getToken: Function;
-  saveToken: Function;
-  token: string;
+  @Inject()
+  cacheManager: CacheManager;
 
-  store: any;
+  @Inject()
+  util: wxUtil;
 
-  weChatCommon: WeChatCommon;
-  AccessToken: WeChatCommon;
+  @Logger()
+  logger: ILogger;
 
-  mpPrefix: string;
-  fileServerPrefix: string;
+  appID: any | string;
+  appSecret: any | string;
+  token: any | string;
+  access_token: any | string;
 
-  yml: YAML = new YAML({
-    fileName: 'wx.config.yml',
-    filePath: './',
-    encoding: 'utf8',
-  });
-
-  /**
-   * 根据appid和appsecret创建API的构造函数
-   * 如需跨进程跨机器进行操作Wechat API（依赖access token），access token需要进行全局维护
-   * 使用策略如下：
-   *
-   * 1. 调用用户传入的获取token的异步方法，获得token之后使用
-   * 2. 使用appid/appsecret获取token。并调用用户传入的保存token方法保存
-   *
-   * Tips:
-   *
-   * - 如果跨机器运行wechat模块，需要注意同步机器之间的系统时间。
-   *
-   * Examples:
-   * ```
-   * var API = require('wechat-api');
-   * var api = new API('appid', 'secret');
-   * ```
-   * 以上即可满足单进程使用。
-   * 当多进程时，token需要全局维护，以下为保存token的接口。
-   * ```
-   * var api = new API('appid', 'secret', function (callback) {
-   *   // 传入一个获取全局token的方法
-   *   fs.readFile('access_token.txt', 'utf8', function (err, txt) {
-   *     if (err) {return callback(err);}
-   *     callback(null, JSON.parse(txt));
-   *   });
-   * }, function (token, callback) {
-   *   // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
-   *   // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例
-   *   fs.writeFile('access_token.txt', JSON.stringify(token), callback);
-   * });
-   * ```
-   * @param {String} appid 在公众平台上申请得到的appid
-   * @param {String} appsecret 在公众平台上申请得到的app secret
-   * @param {Function} getToken 可选的。获取全局token对象的方法，多进程模式部署时需在意
-   * @param {Function} saveToken 可选的。保存全局token对象的方法，多进程模式部署时需在意
-   */
-  // eslint-disable-next-line prettier/prettier
-  public API(appid: string, appsecret: string, getToken: Function, saveToken: Function) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this;
-    this.appid = appid;
-    this.appsecret = appsecret;
-    this.getToken =
-      getToken ||
-      function (callback: Function) {
-        callback(null, that.store);
-      };
-
-    this.saveToken =
-      saveToken ||
-      function (token, callback) {
-        that.store = token;
-        if (process.env.NODE_ENV === 'production') {
-          console.warn(
-            "Don't save token in memory, when cluster or multi-computer!"
-          );
-        }
-        callback(null);
-      };
-    this.endpoint = 'https://api.weixin.qq.com';
-    this.mpPrefix = 'https://mp.weixin.qq.com/cgi-bin/';
-    this.fileServerPrefix = 'http://file.api.weixin.qq.com/cgi-bin/';
-    this.defaults = {};
-    // set default js ticket handle
-    // this.registerTicketHandle();
-  }
-
-  /**
-   * 用于设置接入点
-   *
-   * - 通用域名(api.weixin.qq.com)，使用该域名将访问官方指定就近的接入点；
-   * - 上海域名(sh.api.weixin.qq.com)，使用该域名将访问上海的接入点；
-   * - 深圳域名(sz.api.weixin.qq.com)，使用该域名将访问深圳的接入点；
-   * - 香港域名(hk.api.weixin.qq.com)，使用该域名将访问香港的接入点。
-   *
-   * Examples:
-   * ```
-   * api.setEndpoint('api.weixin.qq.com');
-   * ```
-   * @param {String} domain 域名，默认为api.weixin.qq.com
-   */
-  setEndpoint(domain: string) {
-    this.endpoint = 'https://' + domain;
-  }
-
-  /**
-   * 用于设置urllib的默认options
-   *
-   * Examples:
-   * ```
-   * api.setOpts({timeout: 15000});
-   * ```
-   * @param {Object} opts 默认选项
-   */
-  setOpts(opts) {
-    this.defaults = opts;
-  }
-
-  /*!
-   * 根据创建API时传入的appid和appsecret获取access token
-   * 进行后续所有API调用时，需要先获取access token
-   * 详细请看：<http://mp.weixin.qq.com/wiki/11/0e4b294685f817b95cbed85ba5e82b8f.html>
-   *
-   * 应用开发者无需直接调用本API。
-   *
-   * Examples:
-   * ```
-   * api.getAccessToken(callback);
-   * ```
-   * Callback:
-   *
-   * - `err`, 获取access token出现异常时的异常对象
-   * - `result`, 成功时得到的响应结果
-   *
-   * Result:
-   * ```
-   * {"access_token": "ACCESS_TOKEN","expires_in": 7200}
-   * ```
-   * @param {Function} callback 回调函数
-   */
-  public async getAccessToken(callback: Function) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let that = this;
-    const url = await this.yml.get('accToken', this.appid, this.appsecret);
-
-    this.request(
-      url,
-      { dataType: 'json' },
-      await this.util.wrapper((err, data) => {
-        if (err) {
-          return callback(err);
-        }
-
-        // 过期时间，因网络延迟等，将实际过期时间提前10秒，以防止临界点
-        let expireTime = new Date().getTime() + (data.expires_in - 10) * 1000;
-        let token = new WeChatCommon(data.access_token, expireTime);
-        that.saveToken(token, error => {
-          if (error) {
-            return callback(error);
-          }
-          callback(error, token);
-        });
-      })
+  public async init() {
+    this.appID = this.util.getOpenApi('wxAppID');
+    this.appSecret = this.util.getOpenApi('wxAppSecret');
+    this.token = this.util.getOpenApi('wxToken');
+    this.access_token = await this.cacheManager.get(
+      `wechat:accessToken:${this.appSecret}`
     );
-
-    return this;
   }
 
   /**
-   * 设置urllib的hook
-   *
-   * Examples:
-   * ```
-   * api.setHook(function (options) {
-   *   // options
-   * });
-   * ```
-   * @param {Function} beforeRequest 需要封装的方法
+   * API接口 IP 即api.weixin.qq.com的解析地址，由开发者调用微信侧的接入IP。
    */
-  public async request(
-    url: string | URL,
-    opts: { [x: string]: any; headers?: any },
-    callback: urllib.Callback<any>
-  ) {
-    let options = {
-      headers: {},
+  public async getApiDomainIp(): Promise<any[] | IReslut> {
+    const url = this.util.formatOpenApi('ip', this.access_token);
+    const response = await this.httpService.get(url);
+    // eslint-disable-next-line prettier/prettier
+    const data = this.util.httpServiceResponse(response, url, '获取微信IP');
+    return data;
+  }
+
+  /**
+   * 本接口用于清空公众号/小程序/第三方平台等接口的每日调用接口次数
+   */
+  public async clearQuota(appid = this.appID): Promise<IReslut> {
+    const url = this.util.formatOpenApi('clearQuota', this.access_token);
+    const response = await this.httpService.post(url, { appid });
+    // eslint-disable-next-line prettier/prettier
+    const data = this.util.httpServiceResponse(response, url, '清空 api 的调用quota');
+    return data;
+  }
+
+  /**
+   * 获取AccessToken
+   * @returns
+   */
+  public async fetchAccessToken(): Promise<GetAccessTokenInfo | any> {
+    const url = this.util.formatOpenApi('accToken', this.appID, this.appSecret);
+    const response = await this.httpService.get(url);
+    if (response && response.data) {
+      this.logger.info('微信接口: ', url, response.data);
+      return response.data;
+    } else {
+      this.logger.error('微信接口获取AccessToken错误');
+      return new Error();
+    }
+  }
+
+  /**
+   * 获取单个用户信息
+   * @param openid 普通用户的标识，对当前公众号唯一
+   */
+  public async fetchUserInfo(openid: string): Promise<GetUserInfo | any> {
+    const url = this.util.formatOpenApi('userInfo', this.access_token, openid);
+    // eslint-disable-next-line prettier/prettier
+
+    const response = await this.httpService.get(url);
+    // eslint-disable-next-line prettier/prettier
+    const data = this.util.httpServiceResponse(response, url, '获取单个用户信息错误');
+    return data;
+    if (response && response.data) {
+      this.logger.info('微信接口: ', url, response.data);
+      return response.data;
+    } else {
+      this.logger.error('微信接口获取AccessToken错误', response.data);
+      return new Error(response.data);
+    }
+  }
+
+  /**
+   * 批量获取用户基本信息
+   */
+  public async fetchUserInfoList() {
+    // eslint-disable-next-line prettier/prettier
+    const url = this.util.formatOpenApi('userInfoList', this.access_token);
+    const response = await this.httpService.get(url);
+    // eslint-disable-next-line prettier/prettier
+    const data = this.util.httpServiceResponse(response, url, '批量获取用户基本信息错误');
+    return data;
+  }
+
+  /**
+   * 创建菜单
+   * @params menu
+   */
+  async createDefineMenu(menu): Promise<IReslut> {
+    const url = this.util.formatOpenApi('createMenu', this.access_token);
+    const response = await this.httpService.post(url, menu);
+    const data = this.util.httpServiceResponse(response, url, '创建菜单');
+    return data;
+  }
+
+  /**
+   * 查询菜单
+   * @returns
+   */
+  async inquiryDefineMenu() {
+    const url = this.util.formatOpenApi('getMenu', this.access_token);
+    const response = await this.httpService.get(url);
+    return this.util.httpServiceResponse(response, url, '查询菜单');
+  }
+
+  /**
+   * 删除菜单
+   * @returns any
+   */
+  async deleteDefineMenu() {
+    const url = this.util.formatOpenApi('deleteMenu', this.access_token);
+    const response = await this.httpService.get(url);
+    return this.util.httpServiceResponse(response, url, '删除菜单');
+  }
+
+  /**
+   * 创建微信二维码
+   * @param expire_seconds 二维码有效时间,以秒为单位
+   * @param action_name 二维码类型, QR_SCENE为临时的整型参数值，QR_STR_SCENE为临时的字符串参数值，QR_LIMIT_SCENE为永久的整型参数值，QR_LIMIT_STR_SCENE为永久的字符串参数值
+   */
+  async getWeChatQrcode(expire_seconds = 5, action_name = 'QR_SCENE') {
+    const qrcode = this.util.formatOpenApi('qrcode', this.access_token);
+    let data = {
+      expire_seconds: 60 * expire_seconds, //5分钟有效
+      action_name: action_name,
+      action_info: { scene: { scene_id: 658801 } },
     };
-
-    this.util.extend(options, this.defaults);
-    if (typeof opts === 'function') {
-      callback = opts;
-      opts = {};
-    }
-
-    for (const key in opts) {
-      if (key !== 'headers') {
-        options[key] = opts[key];
-      } else {
-        if (opts.headers) {
-          options.headers = options.headers || {};
-          this.util.extend(options.headers, opts.headers);
-        }
-      }
-    }
-    urllib.request(url, options, callback);
-  }
-
-  /*!
-   * 需要access token的接口调用如果采用preRequest进行封装后，就可以直接调用。
-   * 无需依赖getAccessToken为前置调用。
-   * 应用开发者无需直接调用此API。
-   *
-   * Examples:
-   * ```
-   * api.preRequest(method, arguments);
-   * ```
-   * @param {Function} method 需要封装的方法
-   * @param {Array} args 方法需要的参数
-   */
-  public async preRequest(method: Function, args, retryed) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this;
-    let callback = args[args.length - 1];
-    that.getToken((err, token) => {
-      if (err) {
-        return callback(err);
-      }
-      let accessToken: any;
-      // 有token并且token有效直接调用
-      // eslint-disable-next-line prettier/prettier
-      if (token && (accessToken = new WeChatCommon(token.accessToken, token.expireTime)).isValid()) {
-        // 暂时保存token
-        that.token = accessToken;
-        if (!retryed) {
-          let retryHandle = (err, data, res) => {
-            // 40001 重试
-            if (data && data.errcode && data.errcode === 40001) {
-              return that.preRequest(method, args, true);
-            }
-            callback(err, data, res);
-          };
-          // 替换callback
-          let newargs = Array.prototype.slice.call(args, 0, -1);
-          newargs.push(retryHandle);
-          method.apply(that, newargs);
-        } else {
-          method.apply(that, args);
-        }
-      } else {
-        // 使用appid/appsecret获取token
-        that.getAccessToken((err, token) => {
-          // 如遇错误，通过回调函数传出
-          if (err) {
-            return callback(err);
-          }
-          // 暂时保存token
-          that.token = token;
-          method.apply(that, args);
-        });
-      }
-    });
-  }
-
-  /**
-   * 获取最新的token
-   *
-   * Examples:
-   * ```
-   * api.getLatestToken(callback);
-   * ```
-   * Callback:
-   *
-   * - `err`, 获取access token出现异常时的异常对象
-   * - `token`, 获取的token
-   *
-   * @param {Function} method 需要封装的方法
-   * @param {Array} args 方法需要的参数
-   */
-  getLatestToken(callback: Function) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this;
-    // 调用用户传入的获取token的异步方法，获得token之后使用（并缓存它）
-    that.getToken((err, token) => {
-      if (err) {
-        return callback(err);
-      }
-      let accessToken;
-      // 有token并且token有效直接调用
-      if (
-        token &&
-        (accessToken = new WeChatCommon(
-          token.accessToken,
-          token.expireTime
-        )).isValid()
-      ) {
-        return callback(null, accessToken);
-      }
-      // 使用appid/appsecret获取token
-      that.getAccessToken(callback);
-    });
-  }
-
-  /**
-   * 用于支持对象合并。将对象合并到API.prototype上，使得能够支持扩展
-   * Examples:
-   * ```
-   * // 媒体管理（上传、下载）
-   * WeChatAPI.mixin(require('./lib/api_media'));
-   * ```
-   * @param {Object} obj 要合并的对象
-   */
-  public mixin(obj: object) {
-    Object.assign(WeChatAPI.prototype, obj);
+    const response = await this.httpService.post(qrcode, data);
+    let reslut = this.util.httpServiceResponse(
+      response,
+      qrcode,
+      '创建微信二维码'
+    );
+    const showqrcode = this.util.formatOpenApi('showqrcode', reslut.ticket);
+    // reslut.qrcode = reslut.ticket;
+    return showqrcode;
   }
 }

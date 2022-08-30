@@ -12,11 +12,13 @@ import { join } from 'path';
 import * as staticFile from '@midwayjs/static-file';
 import * as view from '@midwayjs/view-ejs';
 import * as orm from '@midwayjs/orm';
+import * as typeorm from '@midwayjs/typeorm';
 import * as cool from '@cool-midway/core';
 import * as file from '@cool-midway/file';
 import * as localTask from '@midwayjs/task';
 import * as swagger from '@midwayjs/swagger';
-import xmlParser = require('koa-xml-body');
+import * as axios from '@midwayjs/axios';
+import * as redis from '@midwayjs/redis';
 
 // import * as socketio from '@midwayjs/socketio';
 // import * as task from '@cool-midway/task';
@@ -42,9 +44,12 @@ import xmlParser = require('koa-xml-body');
     // socketio,
     // cool-admin 官方组件 https://www.cool-js.com
     cool,
+    // typeorm,
     // 文件上传 阿里云存储 腾讯云存储 七牛云存储
     file,
-
+    // 导入Http组件
+    axios,
+    redis,
     swagger,
     // 任务与队列
     // task,

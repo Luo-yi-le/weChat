@@ -1,15 +1,13 @@
 import {
   Column,
   PrimaryGeneratedColumn,
-  AfterInsert,
+  BeforeUpdate,
   AfterUpdate,
   BeforeInsert,
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
 import { Rule, RuleType } from '@midwayjs/validate';
-import { baseError } from './../../global/comm/Error';
-
 /**
  * 模型基类
  */
@@ -22,7 +20,7 @@ export abstract class BaseEntity {
       .required()
       .error(err => new Error('name不能为空'))
   )
-  @Column({ comment: '别名' })
+  @Column({ comment: '别名', nullable: true })
   name?: string;
 
   @CreateDateColumn({
@@ -38,12 +36,6 @@ export abstract class BaseEntity {
     type: 'timestamp',
   })
   updateTime?: Date;
-
-  // @BeforeInsert()
-  // createTimes() {
-  //   this.createTime = new Date();
-  //   this.updateTime = new Date();
-  // }
 
   // @AfterUpdate()
   // updateTimes() {
