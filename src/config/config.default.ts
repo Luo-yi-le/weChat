@@ -45,8 +45,8 @@ export default {
   redis: {
     client: {
       port: 6379, // Redis port
-      host: '127.0.0.1', // Redis host
-      password: '',
+      host: '175.27.158.145', // Redis host
+      password: '153759.Ljx',
       db: 1,
     },
   },
@@ -54,9 +54,9 @@ export default {
   cache: {
     store: redisStore,
     options: {
-      host: 'localhost',
+      host: '175.27.158.145',
       port: 6379,
-      password: '',
+      password: '153759.Ljx',
       db: 0,
       keyPrefix: 'cache:',
       ttl: 100,
@@ -66,9 +66,9 @@ export default {
   cool: {
     initDB: true,
     redis: {
-      host: '127.0.0.1',
+      host: '175.27.158.145',
       port: 6379,
-      password: '',
+      password: '153759.Ljx',
       db: 1,
     },
     // 是否自动导入数据库

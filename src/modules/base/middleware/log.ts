@@ -40,7 +40,10 @@ export class BaseLogMiddleware implements IMiddleware<Context, NextFunction> {
     // 下面的路由将忽略此中间件
     return (
       ctx.path === '/admin/base/sys/log/page' ||
-      ctx.path.includes('/swagger-ui/')
+      ctx.path.includes('/swagger-ui/') ||
+      ctx.path.includes('/open/')|| 
+      ctx.path.includes('/qrcode')
+      
     );
   }
 }

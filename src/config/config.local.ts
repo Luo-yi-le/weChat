@@ -24,9 +24,9 @@ export default {
     // 是否自动导入数据库
     initDB: true,
     redis: {
-      host: '127.0.0.1',
+      host: '175.27.158.145',
       port: 6379,
-      password: '',
+      password: '153759.Ljx',
       db: 1,
     },
   } as CoolConfig,

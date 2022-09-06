@@ -5,6 +5,11 @@ import {
   GetAccessTokenInfo,
   GetUserInfo,
   IReslut,
+  ICommon,
+  IFuns,
+  ISetFunsName,
+  ITags,
+  ITagsDefault,
 } from './../../../global/types/weChat';
 import { CacheManager } from '@midwayjs/cache';
 import { wxUtil } from './util';
@@ -101,13 +106,12 @@ export class WeChatAPI {
   /**
    * 批量获取用户基本信息
    */
-  public async fetchUserInfoList() {
+  public async fetchUserInfoList(data): Promise<ICommon<GetUserInfo[]>> {
     // eslint-disable-next-line prettier/prettier
     const url = this.util.formatOpenApi('userInfoList', this.access_token);
-    const response = await this.httpService.get(url);
+    const response = await this.httpService.post(url, data);
     // eslint-disable-next-line prettier/prettier
-    const data = this.util.httpServiceResponse(response, url, '批量获取用户基本信息错误');
-    return data;
+    return this.util.httpServiceResponse(response, url, '批量获取用户基本信息错误');
   }
 
   /**
@@ -117,8 +121,8 @@ export class WeChatAPI {
   async createDefineMenu(menu): Promise<IReslut> {
     const url = this.util.formatOpenApi('createMenu', this.access_token);
     const response = await this.httpService.post(url, menu);
-    const data = this.util.httpServiceResponse(response, url, '创建菜单');
-    return data;
+    return this.util.httpServiceResponse(response, url, '创建菜单');
+    
   }
 
   /**
@@ -147,20 +151,83 @@ export class WeChatAPI {
    * @param action_name 二维码类型, QR_SCENE为临时的整型参数值，QR_STR_SCENE为临时的字符串参数值，QR_LIMIT_SCENE为永久的整型参数值，QR_LIMIT_STR_SCENE为永久的字符串参数值
    */
   async getWeChatQrcode(expire_seconds = 5, action_name = 'QR_SCENE') {
-    const qrcode = this.util.formatOpenApi('qrcode', this.access_token);
+    const url = this.util.formatOpenApi('qrcode', this.access_token);
     let data = {
       expire_seconds: 60 * expire_seconds, //5分钟有效
       action_name: action_name,
       action_info: { scene: { scene_id: 658801 } },
     };
-    const response = await this.httpService.post(qrcode, data);
+    const response = await this.httpService.post(url, data);
     let reslut = this.util.httpServiceResponse(
       response,
-      qrcode,
+      url,
       '创建微信二维码'
     );
     const showqrcode = this.util.formatOpenApi('showqrcode', reslut.ticket);
     // reslut.qrcode = reslut.ticket;
     return showqrcode;
   }
+
+  /**
+   * 获取粉丝
+   */
+  async getFuns(next_openid = ''): Promise<IFuns | IReslut> {
+    const url = this.util.formatOpenApi('getFun', this.access_token, next_openid);
+    const response = await this.httpService.get(url);
+    return this.util.httpServiceResponse(response, url, '获取粉丝');
+  }
+
+  /**
+   * 设置用户备注名
+   */
+  async setFunName(data: ISetFunsName): Promise<IReslut> {
+    const url = this.util.formatOpenApi('setFunName', this.access_token);
+    const response = await this.httpService.post(url, data);
+    return this.util.httpServiceResponse(response, url, '设置用户备注名');
+  }
+
+  /**
+   * 创建标签.
+   * 一个公众号，最多可以创建100个标签。
+   */
+   async createTags(data: ITagsDefault): Promise<ITags<ITagsDefault>> {
+    const url = this.util.formatOpenApi('createTags', this.access_token);
+    const response = await this.httpService.post(url, data);
+    return this.util.httpServiceResponse(response, url, '创建标签');
+  }
+
+  /**
+   * 
+   * 获取公众号已创建的标签
+   * @returns 
+   */
+  async getTags(): Promise<ITags<ITagsDefault[]>> {
+    const url = this.util.formatOpenApi('getTags', this.access_token);
+    const response = await this.httpService.get(url);
+    return this.util.httpServiceResponse(response, url, '创建标签');
+  }
+
+  /**
+   * 
+   * 编辑标签
+   * @returns 
+   */
+   async updateTags(data: ITagsDefault): Promise<IReslut> {
+    const url = this.util.formatOpenApi('updateTags', this.access_token);
+    const response = await this.httpService.post(url, data);
+    return this.util.httpServiceResponse(response, url, '创建标签');
+  }
+
+  /**
+   * 
+   * 删除标签
+   * @returns 
+   */
+   async deleteTags(data: ITagsDefault): Promise<IReslut> {
+    const url = this.util.formatOpenApi('deleteTags', this.access_token);
+    const response = await this.httpService.post(url, data);
+    return this.util.httpServiceResponse(response, url, '创建标签');
+  }
+
+  
 }

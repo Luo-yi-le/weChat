@@ -39,4 +39,36 @@ export enum openApi {
 
   clearQuota = 'https://api.weixin.qq.com/cgi-bin/clear_quota?access_token={0}',
   getQuota = 'https://api.weixin.qq.com/cgi-bin/openapi/quota/get?access_token={0}',
+
+  getFun = 'https://api.weixin.qq.com/cgi-bin/user/get?access_token={0}&next_openid={1}',
+
+  setFunName = 'https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token={0}',
+  createTags = 'https://api.weixin.qq.com/cgi-bin/tags/create?access_token={0}',
+  getTags = 'https://api.weixin.qq.com/cgi-bin/tags/get?access_token={0}',
+  updateTags = 'https://api.weixin.qq.com/cgi-bin/tags/update?access_token={0}',
+  deleteTags = 'https://api.weixin.qq.com/cgi-bin/tags/delete?access_token={0}',
+  
+  /**
+   * 获取标签下粉丝列表
+   */
+  getTagsFunList = 'https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token={0}',
+
+  /**
+   * 批量为用户打标签.
+   * 标签功能目前支持公众号为用户打上最多20个标签。
+   */
+   setBatchtagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token={0}',
+
+   /**
+   * 批量为用户取消标签.
+   * 标签功能目前支持公众号为用户打上最多20个标签。
+   */
+   setBatchuntagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token={0}',
+
+   /**
+   * 批量为用户取消标签.
+   * 标签功能目前支持公众号为用户打上最多20个标签。
+   */
+    getidlist = 'https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token={0}',
+
 }

@@ -7,26 +7,32 @@ export type FormatObject<U extends number | string> = { [key: string]: U };
  * @access_token 获取到的凭证
  * @expires_in 凭证有效时间，单位：秒
  */
-export interface common {
-  [key: string]: any;
+export interface ICommon<T = any> {
+  [key: string]: T;
 }
 
-export interface GetAccessTokenInfo extends common {
+export interface GetAccessTokenInfo extends ICommon {
   access_token?: string;
   expires_in?: number;
+}
+
+export interface ITagsDefault extends ICommon{
+  id?: number| string;
+  name?: string;
+  count?: number;
 }
 
 /**
  * 微信数据响应格式
  */
-export interface IReslut extends common {
+export interface IReslut extends ICommon {
   errcode?: number;
   errmsg?: string;
 }
 
-export interface GetUserInfo extends common {
-  subscribe?: string;
-  openid?: number;
+export interface GetUserInfo extends ICommon {
+  subscribe?: string | number | any;
+  openid?: string;
   nickname?: any | string;
   sex?: any | number;
   language?: any | string;
@@ -42,3 +48,23 @@ export interface GetUserInfo extends common {
   qr_scene?: any | string;
   qr_scene_str?: any | string;
 }
+
+/**
+ * 粉丝列表数据
+ */
+export interface IFuns {
+  total: number;
+  count: number;
+  data: object;
+  next_openid: string;
+}
+
+export interface ISetFunsName {
+  openid: string;
+  remark: string;
+}
+
+export interface ITags<T> {
+  tag: T;
+}
+
