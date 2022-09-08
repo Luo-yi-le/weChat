@@ -11,6 +11,7 @@ import { WXAccountService } from '../service/accountService';
 import { CacheManager } from '@midwayjs/cache';
 import { RedisService } from '@midwayjs/redis';
 import { wxUtil } from './../api/util';
+import { UUID } from './../../../global/utils/index';
 
 @Provide()
 export class InteractionService {
@@ -88,29 +89,19 @@ export class InteractionService {
    */
   public async token() {
     const wxAppSecret = this.wxutil.getOpenApi('wxAppSecret');
-    const accessToken = await this.cacheManager.get(
-      `wechat:accessToken:${wxAppSecret}`
-    );
-    const expiresIn = await this.cacheManager.get(
-      `wechat:accessTokenExpiresIn:${wxAppSecret}`
-    );
     // eslint-disable-next-line prettier/prettier
-    if (accessToken && expiresIn && Number(expiresIn) > new Date().getTime()) {
-      this.logger.info(
-        'accessToken信息有有效期：',
-        new Date(Number(expiresIn)).toLocaleString(),
-        JSON.stringify({
-          appSecret: wxAppSecret,
-          expiresIn: expiresIn,
-          accessToken,
-        })
+    const accessToken = await this.cacheManager.get(`wechat:accessToken:${wxAppSecret}`);
+    // eslint-disable-next-line prettier/prettier
+    const expiresIn = await this.cacheManager.get(`wechat:accessTokenExpiresIn:${wxAppSecret}`);
+    // eslint-disable-next-line prettier/prettier
+    if (accessToken && expiresIn && Number(expiresIn) > new Date().getTime()) { //判断是否存在缓存或者过期
+      // eslint-disable-next-line prettier/prettier
+      this.logger.info('accessToken信息有有效期：', new Date(Number(expiresIn)).toLocaleString(),JSON.stringify({appSecret: wxAppSecret, expiresIn: expiresIn, accessToken,})
       );
       await this.api.init();
-      return {
-        access_token: accessToken,
-        expires_in: expiresIn,
-      };
+      return { access_token: accessToken, expires_in: expiresIn };
     } else {
+      //重新获取token并写入缓存
       const accToken = await this.wxAccountService.getAccessToken(wxAppSecret);
       const res = await this.api.fetchAccessToken();
       if (res) {
@@ -119,32 +110,62 @@ export class InteractionService {
           accessToken: res.access_token,
           expiresIn: new Date().getTime() + (res.expires_in - 60) * 1000, //减去60秒 增加重新请求时间
         });
-        await this.cacheManager.set(
-          `wechat:accessToken:${wxAppSecret}`,
-          res.access_token,
-          { ttl: res.expires_in - 60 }
-        );
-        await this.cacheManager.set(
-          `wechat:accessTokenExpiresIn:${wxAppSecret}`,
-          param.expiresIn,
-          { ttl: res.expires_in - 60 }
-        );
+        // eslint-disable-next-line prettier/prettier
+        await this.cacheManager.set(`wechat:accessToken:${wxAppSecret}`, res.access_token, { ttl: res.expires_in - 60 });
+        // eslint-disable-next-line prettier/prettier
+        await this.cacheManager.set(`wechat:accessTokenExpiresIn:${wxAppSecret}`, param.expiresIn, { ttl: res.expires_in - 60 });
         await this.wxAccountService.updateAccessToken(param);
-        this.logger.info(
-          '重新获取accessToken，有效期',
-          new Date(param.expiresIn).toLocaleString(),
-          JSON.stringify(param)
-        );
+        // eslint-disable-next-line prettier/prettier
+        this.logger.info('重新获取accessToken，有效期', new Date(param.expiresIn).toLocaleString(), JSON.stringify(param));
         await this.api.init();
-        return {
-          access_token: res.access_token,
-          expires_in: param.expiresIn,
-        };
+        return { access_token: res.access_token, expires_in: param.expiresIn };
       } else {
         this.logger.error('获取accessToken错误：', res);
         return new Error('获取accessToken错误: ' + res);
       }
     }
     // let res = await this.api.fetchAccessToken();
+  }
+
+  async loadConfigData(url: string, type?: string) {
+    const noncestr = UUID(16);
+    let timestamp = new Date().getTime() / 1000,
+      jsapi_ticket = '',
+      str = '';
+    const ticket: string = await this.cacheManager.get(
+      'wechat:loadConfigData:ticket'
+    );
+    const expiresIn = await this.cacheManager.get(
+      'wechat:loadConfigData:expires_in'
+    );
+    await this.api.init();
+
+    if (ticket && expiresIn && Number(expiresIn) > new Date().getTime()) {
+      jsapi_ticket = ticket;
+      str = `jsapi_ticket=${ticket}&noncestr=${noncestr}&timestamp=${timestamp}&url=${url}`;
+    } else {
+      let res = await this.api.getTicketOfJsApi(type);
+      jsapi_ticket = res.ticket;
+      str = `jsapi_ticket=${res.ticke}&noncestr=${noncestr}&timestamp=${timestamp}&url=${url}`;
+      await this.cacheManager.set(
+        'wechat:loadConfigData:ticket',
+        jsapi_ticket,
+        { ttl: res.expires_in - 60 }
+      );
+      await this.cacheManager.set(
+        'wechat:loadConfigData:expires_in',
+        Number(res.expires_in) - 60,
+        { ttl: res.expires_in - 60 }
+      );
+    }
+    return {
+      jsapi_ticket: jsapi_ticket,
+      timestamp: timestamp,
+      noncestr,
+      url,
+      signature: sha1(str),
+      appId: this.api.appID,
+      appSecret: this.api.appSecret,
+    };
   }
 }
