@@ -47,6 +47,7 @@ export class TaskInfoService extends BaseService {
    */
   async stop(id) {
     const task = await this.taskInfoEntity.findOne({ id });
+    console.log(2222222, task);
     if (task) {
       const result = await this.taskInfoQueue.getRepeatableJobs();
       const job = _.find(result, { id: task.id + '' });
@@ -57,6 +58,16 @@ export class TaskInfoService extends BaseService {
       await this.taskInfoEntity.update(task.id, task);
       await this.updateNextRunTime(task.id);
     }
+  }
+
+  /**
+   * 移除任务
+   * @param taskId
+   */
+  async remove(taskId) {
+    const result = await this.taskInfoQueue.getRepeatableJobs();
+    const job = _.find(result, { id: taskId + '' });
+    await this.taskInfoQueue.removeRepeatableByKey(job.key);
   }
 
   /**
@@ -99,7 +110,7 @@ export class TaskInfoService extends BaseService {
    * @param jobId
    */
   async exist(jobId) {
-    const result = await this.taskInfoQueue.getRepeatableJobs();
+    const result = await this.taskInfoQueue.getRepeatableJobs(1, 1);
     const ids = result.map(e => {
       return e.id;
     });
@@ -294,13 +305,14 @@ export class TaskInfoService extends BaseService {
     const task = await this.taskInfoEntity.findOne({ id: job.id });
     const nextTime = await this.getNextRunTime(task.id);
     if (task) {
-      if (task.nextRunTime.getTime() == nextTime.getTime()) {
-        task.status = 0;
-        task.nextRunTime = nextTime;
-        this.taskInfoQueue.removeRepeatableByKey(job.key);
-      } else {
-        task.nextRunTime = nextTime;
-      }
+      // if (task.nextRunTime.getTime() == nextTime.getTime()) {
+      //   task.status = 0;
+      //   task.nextRunTime = nextTime;
+      //   this.taskInfoQueue.removeRepeatableByKey(job.key);
+      // } else {
+      //   task.nextRunTime = nextTime;
+      // }
+      task.nextRunTime = nextTime;
       await this.taskInfoEntity.update(task.id, task);
     }
   }
@@ -313,6 +325,7 @@ export class TaskInfoService extends BaseService {
     if (serviceStr) {
       const arr = serviceStr.split('.');
       const service = await this.app.getApplicationContext().getAsync(arr[0]);
+      this.logger.info(this.app.getApplicationContext().getAsync('weChatApi'));
       for (const child of arr) {
         if (child.includes('(')) {
           const lastArr = child.split('(');

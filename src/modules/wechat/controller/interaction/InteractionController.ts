@@ -61,4 +61,13 @@ export class InteractionController extends BaseController {
     );
     this.ctx.body = message;
   }
+
+  @Get('/loadConfigData')
+  public async loadConfigData(
+    @Query('url') url?: string,
+    @Query('type') type?: string
+  ) {
+    const res = await this.interactionService.loadConfigData(url, type);
+    return this.ok(res);
+  }
 }

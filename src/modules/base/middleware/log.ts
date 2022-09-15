@@ -19,13 +19,14 @@ export class BaseLogMiddleware implements IMiddleware<Context, NextFunction> {
       const baseSysLogService = await ctx.requestContext.getAsync(
         BaseSysLogService
       );
-      const token = ctx.get('Authorization');
-      ctx.admin = jwt.verify(token, this.jwtConfig.jwt.secret);
       if (url.includes('/interaction/')) {
         ctx.admin = {
           userId: '2',
           name: '微信登录用户',
         };
+      } else {
+        // const token = ctx.get('Authorization');
+        // ctx.admin = jwt.verify(token, this.jwtConfig.jwt.secret);
       }
       baseSysLogService.record(
         ctx,
@@ -41,9 +42,8 @@ export class BaseLogMiddleware implements IMiddleware<Context, NextFunction> {
     return (
       ctx.path === '/admin/base/sys/log/page' ||
       ctx.path.includes('/swagger-ui/') ||
-      ctx.path.includes('/open/')|| 
+      ctx.path.includes('/open/') ||
       ctx.path.includes('/qrcode')
-      
     );
   }
 }

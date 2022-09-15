@@ -16,8 +16,8 @@ export interface GetAccessTokenInfo extends ICommon {
   expires_in?: number;
 }
 
-export interface ITagsDefault extends ICommon{
-  id?: number| string;
+export interface ITagsDefault extends ICommon {
+  id?: number | string;
   name?: string;
   count?: number;
 }
@@ -67,4 +67,3 @@ export interface ISetFunsName {
 export interface ITags<T> {
   tag: T;
 }
-

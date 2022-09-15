@@ -5,6 +5,7 @@ import {
   Context,
   IMidwayBaseApplication,
 } from '@midwayjs/core';
+import { Queue } from 'bullmq';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
@@ -15,13 +16,13 @@ import * as orm from '@midwayjs/orm';
 import * as typeorm from '@midwayjs/typeorm';
 import * as cool from '@cool-midway/core';
 import * as file from '@cool-midway/file';
-import * as localTask from '@midwayjs/task';
+// import * as task from '@midwayjs/task';
 import * as swagger from '@midwayjs/swagger';
 import * as axios from '@midwayjs/axios';
 import * as redis from '@midwayjs/redis';
-
+import { QueueService } from '@midwayjs/task';
 // import * as socketio from '@midwayjs/socketio';
-// import * as task from '@cool-midway/task';
+import * as task from '@cool-midway/task';
 // import * as pay from '@cool-midway/pay';
 // import * as es from '@cool-midway/es';
 // import * as rpc from '@cool-midway/rpc';
@@ -33,7 +34,7 @@ import * as redis from '@midwayjs/redis';
     // 参数验证 http://midwayjs.org/docs/extensions/validate
     validate,
     // 本地任务 http://midwayjs.org/docs/extensions/task
-    localTask,
+    task,
     // 模板渲染 http://midwayjs.org/docs/extensions/render
     view,
     // 静态文件托管 http://midwayjs.org/docs/extensions/static_file
@@ -77,4 +78,12 @@ export class ContainerLifeCycle implements ILifeCycle {
 
   // 应用停止
   async onStop() {}
+
+  // eslint-disable-next-line prettier/prettier
+  async onServerReady(container: IMidwayContainer, app?: IMidwayBaseApplication<Context>): Promise<void> {
+    // Task这块的启动后立马执行
+    // let result: QueueService = await container.getAsync(QueueService);
+    // let job: Queue = result.getQueueTask('TaskInfoService', 'initTask');
+    // console.log(22222222222, result, job);
+  }
 }

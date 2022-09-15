@@ -122,7 +122,6 @@ export class WeChatAPI {
     const url = this.util.formatOpenApi('createMenu', this.access_token);
     const response = await this.httpService.post(url, menu);
     return this.util.httpServiceResponse(response, url, '创建菜单');
-    
   }
 
   /**
@@ -158,11 +157,7 @@ export class WeChatAPI {
       action_info: { scene: { scene_id: 658801 } },
     };
     const response = await this.httpService.post(url, data);
-    let reslut = this.util.httpServiceResponse(
-      response,
-      url,
-      '创建微信二维码'
-    );
+    let reslut = this.util.httpServiceResponse(response, url, '创建微信二维码');
     const showqrcode = this.util.formatOpenApi('showqrcode', reslut.ticket);
     // reslut.qrcode = reslut.ticket;
     return showqrcode;
@@ -172,7 +167,11 @@ export class WeChatAPI {
    * 获取粉丝
    */
   async getFuns(next_openid = ''): Promise<IFuns | IReslut> {
-    const url = this.util.formatOpenApi('getFun', this.access_token, next_openid);
+    const url = this.util.formatOpenApi(
+      'getFun',
+      this.access_token,
+      next_openid
+    );
     const response = await this.httpService.get(url);
     return this.util.httpServiceResponse(response, url, '获取粉丝');
   }
@@ -190,16 +189,16 @@ export class WeChatAPI {
    * 创建标签.
    * 一个公众号，最多可以创建100个标签。
    */
-   async createTags(data: ITagsDefault): Promise<ITags<ITagsDefault>> {
+  async createTags(data: ITagsDefault): Promise<ITags<ITagsDefault>> {
     const url = this.util.formatOpenApi('createTags', this.access_token);
     const response = await this.httpService.post(url, data);
     return this.util.httpServiceResponse(response, url, '创建标签');
   }
 
   /**
-   * 
+   *
    * 获取公众号已创建的标签
-   * @returns 
+   * @returns
    */
   async getTags(): Promise<ITags<ITagsDefault[]>> {
     const url = this.util.formatOpenApi('getTags', this.access_token);
@@ -208,26 +207,38 @@ export class WeChatAPI {
   }
 
   /**
-   * 
+   *
    * 编辑标签
-   * @returns 
+   * @returns
    */
-   async updateTags(data: ITagsDefault): Promise<IReslut> {
+  async updateTags(data: ITagsDefault): Promise<IReslut> {
     const url = this.util.formatOpenApi('updateTags', this.access_token);
     const response = await this.httpService.post(url, data);
     return this.util.httpServiceResponse(response, url, '创建标签');
   }
 
   /**
-   * 
+   *
    * 删除标签
-   * @returns 
+   * @returns
    */
-   async deleteTags(data: ITagsDefault): Promise<IReslut> {
+  async deleteTags(data: ITagsDefault): Promise<IReslut> {
     const url = this.util.formatOpenApi('deleteTags', this.access_token);
     const response = await this.httpService.post(url, data);
     return this.util.httpServiceResponse(response, url, '创建标签');
   }
 
-  
+  /**
+   * JS-SDK使用权限签名算法
+   * @returns any
+   */
+  async getTicketOfJsApi(type = 'jsapi'): Promise<IReslut> {
+    const url = this.util.formatOpenApi(
+      'getTicketOfJsApi',
+      this.access_token,
+      type
+    );
+    const response = await this.httpService.get(url);
+    return this.util.httpServiceResponse(response, url, 'JS-SDK使用权限签名');
+  }
 }

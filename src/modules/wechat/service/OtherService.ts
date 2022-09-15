@@ -1,4 +1,4 @@
-import { Inject, Provide, Logger } from '@midwayjs/decorator';
+import { Inject, Provide, Logger, Task, FORMAT } from '@midwayjs/decorator';
 import { BaseService, CoolCommException } from '@cool-midway/core';
 import { ILogger } from '@midwayjs/logger';
 import { Context } from '@midwayjs/koa';
@@ -29,16 +29,20 @@ export class OtherService extends BaseService {
   async createQrCode() {
     await this.weChatAPI.init();
     const qrcode = await this.weChatAPI.getWeChatQrcode();
-    
     const res = await this.weChatAPI.getFuns();
     const userlist = [];
-    res.data.openid.forEach(item=>{
-      userlist.push({openid: item, "lang": "zh_CN"})
-    })
+    res.data.openid.forEach(item => {
+      userlist.push({ openid: item, lang: 'zh_CN' });
+    });
     const a = await this.weChatAPI.fetchUserInfoList({ user_list: userlist });
-    a.user_info_list.find( async item => {
-      await this.userService.addWXUser(item)
-    })
+    a.user_info_list.find(async item => {
+      await this.userService.addWXUser(item);
+    });
     return qrcode;
   }
+
+  @Task({
+    repeat: { cron: '0 35 2 * * ?' },
+  })
+  async getApiDomainIp() {}
 }

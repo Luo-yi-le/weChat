@@ -96,7 +96,7 @@ export class InteractionService {
     // eslint-disable-next-line prettier/prettier
     if (accessToken && expiresIn && Number(expiresIn) > new Date().getTime()) { //判断是否存在缓存或者过期
       // eslint-disable-next-line prettier/prettier
-      this.logger.info('accessToken信息有有效期：', new Date(Number(expiresIn)).toLocaleString(),JSON.stringify({appSecret: wxAppSecret, expiresIn: expiresIn, accessToken,})
+      this.logger.info('accessToken信息有有效期：', new Date(Number(expiresIn)).toLocaleString(), JSON.stringify({appSecret: wxAppSecret, expiresIn: expiresIn, accessToken,})
       );
       await this.api.init();
       return { access_token: accessToken, expires_in: expiresIn };
@@ -132,12 +132,10 @@ export class InteractionService {
     let timestamp = new Date().getTime() / 1000,
       jsapi_ticket = '',
       str = '';
-    const ticket: string = await this.cacheManager.get(
-      'wechat:loadConfigData:ticket'
-    );
-    const expiresIn = await this.cacheManager.get(
-      'wechat:loadConfigData:expires_in'
-    );
+    // eslint-disable-next-line prettier/prettier
+    const ticket: string = await this.cacheManager.get('wechat:loadConfigData:ticket');
+    // eslint-disable-next-line prettier/prettier
+    const expiresIn = await this.cacheManager.get('wechat:loadConfigData:expires_in');
     await this.api.init();
 
     if (ticket && expiresIn && Number(expiresIn) > new Date().getTime()) {
@@ -147,16 +145,10 @@ export class InteractionService {
       let res = await this.api.getTicketOfJsApi(type);
       jsapi_ticket = res.ticket;
       str = `jsapi_ticket=${res.ticke}&noncestr=${noncestr}&timestamp=${timestamp}&url=${url}`;
-      await this.cacheManager.set(
-        'wechat:loadConfigData:ticket',
-        jsapi_ticket,
-        { ttl: res.expires_in - 60 }
-      );
-      await this.cacheManager.set(
-        'wechat:loadConfigData:expires_in',
-        Number(res.expires_in) - 60,
-        { ttl: res.expires_in - 60 }
-      );
+      // eslint-disable-next-line prettier/prettier
+      await this.cacheManager.set('wechat:loadConfigData:ticket', jsapi_ticket, { ttl: res.expires_in - 60 });
+      // eslint-disable-next-line prettier/prettier
+      await this.cacheManager.set('wechat:loadConfigData:expires_in', Number(res.expires_in) - 60, { ttl: res.expires_in - 60 });
     }
     return {
       jsapi_ticket: jsapi_ticket,

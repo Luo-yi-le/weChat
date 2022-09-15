@@ -5,6 +5,12 @@ import * as redisStore from 'cache-manager-ioredis';
 import * as fsStore from 'cache-manager-fs-hash';
 import { BaseEntitySubscriber } from './../global/subscriber/baseEntitySubscriber';
 
+const redis = {
+  port: 6379, // Redis port
+  host: '175.27.158.145', // Redis host
+  password: '153759.Ljx',
+};
+
 export default {
   // 修改成你自己独有的key
   keys: 'wulingshan',
@@ -43,34 +49,27 @@ export default {
   //   },
   // },
   redis: {
-    client: {
-      port: 6379, // Redis port
-      host: '175.27.158.145', // Redis host
-      password: '153759.Ljx',
-      db: 1,
-    },
+    client: Object.assign({}, redis, { db: 1 }),
   },
   // redis缓存
   cache: {
     store: redisStore,
-    options: {
-      host: '175.27.158.145',
-      port: 6379,
-      password: '153759.Ljx',
-      db: 0,
-      keyPrefix: 'cache:',
-      ttl: 100,
+    options: Object.assign({}, redis, { db: 1, keyPrefix: 'cache:', ttl: 100 }),
+  },
+  //分布式定时任务
+  task: {
+    redis: redis,
+    prefix: 'wechat-task',
+    defaultJobOptions: {
+      repeat: {
+        tz: 'Asia/Shanghai', // Task 等参数里面设置的比如（0 0 0 * * *）本来是为了0点执行，但是由于时区不对，所以国内用户时区设置一下。
+      },
     },
   },
   // cool配置
   cool: {
     initDB: true,
-    redis: {
-      host: '175.27.158.145',
-      port: 6379,
-      password: '153759.Ljx',
-      db: 1,
-    },
+    redis: Object.assign({}, redis, { db: 1 }),
     // 是否自动导入数据库
     file: {
       // 上传模式 本地上传或云存储

@@ -6,6 +6,4 @@ import { BaseEntity } from './../../../global/entity/baseEntity';
  * 微信公众号菜单
  */
 @EntityModel('wechat_funs')
-export class WXFunsEntity extends BaseEntity {
-
-}
+export class WXFunsEntity extends BaseEntity {}

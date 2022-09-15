@@ -47,7 +47,7 @@ export enum openApi {
   getTags = 'https://api.weixin.qq.com/cgi-bin/tags/get?access_token={0}',
   updateTags = 'https://api.weixin.qq.com/cgi-bin/tags/update?access_token={0}',
   deleteTags = 'https://api.weixin.qq.com/cgi-bin/tags/delete?access_token={0}',
-  
+
   /**
    * 获取标签下粉丝列表
    */
@@ -57,18 +57,19 @@ export enum openApi {
    * 批量为用户打标签.
    * 标签功能目前支持公众号为用户打上最多20个标签。
    */
-   setBatchtagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token={0}',
+  setBatchtagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token={0}',
 
-   /**
+  /**
    * 批量为用户取消标签.
    * 标签功能目前支持公众号为用户打上最多20个标签。
    */
-   setBatchuntagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token={0}',
+  setBatchuntagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token={0}',
 
-   /**
+  /**
    * 批量为用户取消标签.
    * 标签功能目前支持公众号为用户打上最多20个标签。
    */
-    getidlist = 'https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token={0}',
+  getidlist = 'https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token={0}',
 
+  getTicketOfJsApi = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={0}&type=jsapi',
 }
