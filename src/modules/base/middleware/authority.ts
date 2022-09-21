@@ -57,7 +57,7 @@ export class BaseAuthorityMiddleware
           if (ctx.admin.isRefresh) {
             ctx.status = 401;
             ctx.body = {
-              code: RESCODE.COMMFAIL,
+              code: ctx.status, //RESCODE.COMMFAIL
               message: '登录失效~',
             };
             return;
@@ -69,7 +69,7 @@ export class BaseAuthorityMiddleware
           if (passwordV != ctx.admin.passwordVersion) {
             ctx.status = 401;
             ctx.body = {
-              code: RESCODE.COMMFAIL,
+              code: ctx.status, //RESCODE.COMMFAIL
               message: '登录失效~',
             };
             return;
@@ -80,7 +80,7 @@ export class BaseAuthorityMiddleware
           if (!rToken) {
             ctx.status = 401;
             ctx.body = {
-              code: RESCODE.COMMFAIL,
+              code: ctx.status, //RESCODE.COMMFAIL
               message: '登录失效或无权限访问~',
             };
             return;
@@ -108,7 +108,7 @@ export class BaseAuthorityMiddleware
         if (statusCode > 200) {
           ctx.status = statusCode;
           ctx.body = {
-            code: RESCODE.COMMFAIL,
+            code: ctx.status, //RESCODE.COMMFAIL
             message: '登录失效或无权限访问~',
           };
           return;

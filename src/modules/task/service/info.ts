@@ -47,7 +47,6 @@ export class TaskInfoService extends BaseService {
    */
   async stop(id) {
     const task = await this.taskInfoEntity.findOne({ id });
-    console.log(2222222, task);
     if (task) {
       const result = await this.taskInfoQueue.getRepeatableJobs();
       const job = _.find(result, { id: task.id + '' });
@@ -78,7 +77,7 @@ export class TaskInfoService extends BaseService {
   async start(id, type?) {
     const task = await this.taskInfoEntity.findOne({ id });
     task.status = 1;
-    if (type) {
+    if (type || type == 0) {
       task.type = type;
     }
     await this.addOrUpdate(task);
@@ -110,7 +109,7 @@ export class TaskInfoService extends BaseService {
    * @param jobId
    */
   async exist(jobId) {
-    const result = await this.taskInfoQueue.getRepeatableJobs(1, 1);
+    const result = await this.taskInfoQueue.getRepeatableJobs();
     const ids = result.map(e => {
       return e.id;
     });
@@ -122,6 +121,7 @@ export class TaskInfoService extends BaseService {
    * @param params
    */
   async addOrUpdate(params) {
+    delete params.repeatCount;
     let repeatConf;
     await this.getOrmManager().transaction(async transactionalEntityManager => {
       if (params.taskType === 0) {
@@ -135,7 +135,7 @@ export class TaskInfoService extends BaseService {
       if (params.status === 1) {
         const exist = await this.exist(params.id);
         if (exist) {
-          this.stop(params.id);
+          await this.remove(params.id);
         }
         const { every, limit, startDate, endDate, cron } = params;
         const repeat = {
@@ -157,7 +157,8 @@ export class TaskInfoService extends BaseService {
           throw new Error('任务添加失败，请检查任务配置');
         }
         // await transactionalEntityManager.update(TaskInfoEntity, params.id, {
-        //   jobId: opts.jobId,
+        //   jobId: params.id,
+        //   type: params.type,
         // });
         repeatConf = result.opts;
       }
@@ -245,16 +246,18 @@ export class TaskInfoService extends BaseService {
    * 初始化任务
    */
   async initTask() {
-    const runningTasks = await this.taskInfoEntity.find({ status: 1 });
-    if (!_.isEmpty(runningTasks)) {
-      for (const task of runningTasks) {
-        const job = await this.exist(task.id); // 任务已存在就不添加
-        if (!job) {
-          this.logger.info(`init task ${task.name}`);
-          await this.addOrUpdate(task);
+    setTimeout(async () => {
+      const runningTasks = await this.taskInfoEntity.find({ status: 1 });
+      if (!_.isEmpty(runningTasks)) {
+        for (const task of runningTasks) {
+          const job = await this.exist(task.id); // 任务已存在就不添加
+          if (!job) {
+            this.logger.info(`init task ${task.name}`);
+            await this.addOrUpdate(task);
+          }
         }
       }
-    }
+    }, 3000);
   }
 
   /**
@@ -301,18 +304,20 @@ export class TaskInfoService extends BaseService {
   async updateStatus(jobId) {
     const result = await this.taskInfoQueue.getRepeatableJobs();
     const job = _.find(result, { id: jobId + '' });
+    if (!job) {
+      return;
+    }
     // @ts-ignore
     const task = await this.taskInfoEntity.findOne({ id: job.id });
     const nextTime = await this.getNextRunTime(task.id);
     if (task) {
-      // if (task.nextRunTime.getTime() == nextTime.getTime()) {
-      //   task.status = 0;
-      //   task.nextRunTime = nextTime;
-      //   this.taskInfoQueue.removeRepeatableByKey(job.key);
-      // } else {
-      //   task.nextRunTime = nextTime;
-      // }
+      //   if (task.nextRunTime.getTime() == nextTime.getTime()) {
+      //     task.status = 0;
+      //     task.nextRunTime = nextTime;
+      //     this.taskInfoQueue.removeRepeatableByKey(job.key);
+      //   } else {
       task.nextRunTime = nextTime;
+      //   }
       await this.taskInfoEntity.update(task.id, task);
     }
   }
@@ -325,7 +330,6 @@ export class TaskInfoService extends BaseService {
     if (serviceStr) {
       const arr = serviceStr.split('.');
       const service = await this.app.getApplicationContext().getAsync(arr[0]);
-      this.logger.info(this.app.getApplicationContext().getAsync('weChatApi'));
       for (const child of arr) {
         if (child.includes('(')) {
           const lastArr = child.split('(');
