@@ -19,7 +19,7 @@ import { InteractionService } from '../../service/InteractionService';
 @Provide()
 @CoolController('/interaction')
 export class InteractionController extends BaseController {
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
 
   @Inject()

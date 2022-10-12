@@ -9,6 +9,18 @@ const redis = {
   port: 6379, // Redis port
   host: '175.27.158.145', // Redis host
   password: '153759.Ljx',
+  db: 1,
+};
+
+const logger = {
+  maxFiles: '3d',
+  fileLogName: 'wechat.log',
+  enableConsole: false,
+  level: 'warn',
+  maxSize: '100m',
+  format: info => {
+    return `${info.timestamp} ${info.LEVEL} ${info.pid} ${info.labelText}${info.message}`;
+  },
 };
 
 export default {
@@ -21,6 +33,17 @@ export default {
     dataSource: {
       // 传入订阅类
       subscribers: [BaseEntitySubscriber],
+    },
+  },
+  midwayLogger: {
+    default: {
+      maxFiles: '3d',
+      maxSize: '100m',
+    },
+    clients: {
+      wechat: Object.assign({}, logger, { fileLogName: 'wechat.log' }),
+      base: Object.assign({}, logger, { fileLogName: 'base.log' }),
+      task: Object.assign({}, logger, { fileLogName: 'task.log' }),
     },
   },
   bodyParser: {
@@ -49,12 +72,12 @@ export default {
   //   },
   // },
   redis: {
-    client: Object.assign({}, redis, { db: 1 }),
+    client: redis,
   },
   // redis缓存
   cache: {
     store: redisStore,
-    options: Object.assign({}, redis, { db: 1, keyPrefix: 'cache:', ttl: 100 }),
+    options: Object.assign({}, redis, { keyPrefix: 'cache:', ttl: 100 }),
   },
   //分布式定时任务
   task: {
@@ -69,7 +92,7 @@ export default {
   // cool配置
   cool: {
     initDB: true,
-    redis: Object.assign({}, redis, { db: 1 }),
+    redis: Object.assign({}, redis),
     // 是否自动导入数据库
     file: {
       // 上传模式 本地上传或云存储

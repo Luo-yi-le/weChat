@@ -16,7 +16,7 @@ import * as orm from '@midwayjs/orm';
 import * as typeorm from '@midwayjs/typeorm';
 import * as cool from '@cool-midway/core';
 import * as file from '@cool-midway/file';
-// import * as task from '@midwayjs/task';
+import * as midwayTask from '@midwayjs/task';
 import * as swagger from '@midwayjs/swagger';
 import * as axios from '@midwayjs/axios';
 import * as redis from '@midwayjs/redis';
@@ -52,6 +52,7 @@ import * as task from '@cool-midway/task';
     axios,
     redis,
     swagger,
+    midwayTask,
     // 任务与队列
     // task,
     // 支付 微信与支付宝
@@ -84,6 +85,6 @@ export class ContainerLifeCycle implements ILifeCycle {
     // Task这块的启动后立马执行
     // let result: QueueService = await container.getAsync(QueueService);
     // let job: Queue = result.getQueueTask('TaskInfoService', 'initTask');
-    // console.log(22222222222, result, job);
+    // console.log(22222222222, result);
   }
 }

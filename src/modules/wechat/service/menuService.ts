@@ -17,7 +17,7 @@ export class WXMenuService extends BaseService {
   @InjectEntityModel(WXMenuEntity)
   wxMenuEntity: Repository<WXMenuEntity>;
 
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
 
   @Inject()

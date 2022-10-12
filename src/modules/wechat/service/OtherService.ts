@@ -17,7 +17,7 @@ export class OtherService extends BaseService {
   @Inject()
   userService: UserService;
 
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
 
   @Inject()
@@ -41,8 +41,15 @@ export class OtherService extends BaseService {
     return qrcode;
   }
 
-  @Task({
-    repeat: { cron: '0 35 2 * * ?' },
-  })
-  async getApiDomainIp() {}
+  // @Task({
+  //   repeat: { cron: '0 35 2 * * ?' },
+  // })
+  async getApiDomainIp() {
+    await this.weChatAPI.init();
+    const res = await this.weChatAPI.getApiDomainIp();
+    this.logger.info(
+      '刷新微信服务器IP成功： ' + JSON.stringify(res),
+      new Error('刷新微信服务器IP失败： ' + JSON.stringify(res))
+    );
+  }
 }

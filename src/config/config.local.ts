@@ -20,14 +20,14 @@ export default {
     // 字符集
     charset: 'utf8mb4',
   },
-  // cool: {
-  //   // 是否自动导入数据库
-  //   initDB: true,
-  //   redis: {
-  //     host: '175.27.158.145',
-  //     port: 6379,
-  //     password: '153759.Ljx',
-  //     db: 1,
-  //   },
-  // } as CoolConfig,
+  cool: {
+    // 是否自动导入数据库
+    initDB: true,
+    redis: {
+      host: '175.27.158.145',
+      port: 6379,
+      password: '153759.Ljx',
+      db: 1,
+    },
+  } as CoolConfig,
 } as MidwayConfig;

@@ -27,7 +27,7 @@ export class MessageService extends BaseService {
   @Inject()
   ctx: Context;
 
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
 
   @Inject()
@@ -68,9 +68,6 @@ export class MessageService extends BaseService {
 
     const wxuser: WXUser = await this.api.fetchUserInfo(msg.FromUserName);
     if (wxuser && wxuser?.openid) {
-      wxuser.subscribe_scene = wxuser.subscribe
-        ? WX_SUBSCRIBE_SCENE[wxuser.subscribe_scene]
-        : WX_SUBSCRIBE_SCENE.CANCEL_SCENE;
       await this.userService.addWXUser(wxuser);
     }
     await this.message.save(msg);

@@ -14,7 +14,7 @@ type T = Formatted;
  */
 @Provide()
 export class wxUtil {
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
   /**
    * 占位符替换

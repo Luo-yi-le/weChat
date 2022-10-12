@@ -8,7 +8,12 @@ import { Context } from '@midwayjs/koa';
 import { Validate } from '@midwayjs/validate';
 import { WeChatAPI } from '../api/index';
 import { ILogger } from '@midwayjs/logger';
-
+import {
+  WX_MESSAGE_TYPE,
+  WX_MESSAGE_TYPE_NAME,
+  WX_SUBSCRIBE_SCENE,
+  WX_MESSAGE_EVENT,
+} from './../../../global/enum/wxEnum';
 /**
  * 微信公众号用户
  */
@@ -16,7 +21,7 @@ import { ILogger } from '@midwayjs/logger';
 export class UserService extends BaseService {
   @InjectEntityModel(WXUser)
   wxUser: Repository<WXUser>;
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
 
   @Inject()
@@ -30,6 +35,9 @@ export class UserService extends BaseService {
       openid: user.openid,
     });
     let result = null;
+    user.subscribe_scene = user.subscribe
+      ? WX_SUBSCRIBE_SCENE[user.subscribe_scene]
+      : WX_SUBSCRIBE_SCENE.CANCEL_SCENE;
     if (exists && exists?.id) {
       result = await this.wxUser.update(exists?.id, user);
       this.logger.info('更新微信用户：', result);
@@ -38,6 +46,7 @@ export class UserService extends BaseService {
       // delete user.id;
       // delete user.updateTime;
       result = await this.wxUser.save(user);
+      this.logger.info('添加微信用户：', result);
     }
 
     return result;

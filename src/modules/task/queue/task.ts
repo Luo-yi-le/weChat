@@ -18,7 +18,6 @@ export abstract class TaskInfoQueue extends BaseCoolQueue {
   async data(job: Job, done: any): Promise<void> {
     try {
       const result = await this.taskInfoService.invokeService(job.data.service);
-      console.log(111111111, result, job);
       this.taskInfoService.record(job.data, 1, JSON.stringify(result));
     } catch (error) {
       this.taskInfoService.record(job.data, 0, error.message);

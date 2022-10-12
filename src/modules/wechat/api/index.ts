@@ -27,7 +27,7 @@ export class WeChatAPI {
   @Inject()
   util: wxUtil;
 
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
 
   appID: any | string;

@@ -15,7 +15,7 @@ import { UUID } from './../../../global/utils/index';
 
 @Provide()
 export class InteractionService {
-  @Logger()
+  @Logger('wechat')
   logger: ILogger;
 
   @Inject()
@@ -90,15 +90,15 @@ export class InteractionService {
   public async token() {
     const wxAppSecret = this.wxutil.getOpenApi('wxAppSecret');
     // eslint-disable-next-line prettier/prettier
-    const accessToken = await this.cacheManager.get(`wechat:accessToken:${wxAppSecret}`);
+    const accessToken = await this.cacheManager.get(`wechat:accessToken:${wxAppSecret}`) || '';
     // eslint-disable-next-line prettier/prettier
-    const expiresIn = await this.cacheManager.get(`wechat:accessTokenExpiresIn:${wxAppSecret}`);
+    const expiresIn = await this.cacheManager.get(`wechat:accessTokenExpiresIn:${wxAppSecret}`) || 0;
+    await this.api.init();
     // eslint-disable-next-line prettier/prettier
     if (accessToken && expiresIn && Number(expiresIn) > new Date().getTime()) { //判断是否存在缓存或者过期
       // eslint-disable-next-line prettier/prettier
       this.logger.info('accessToken信息有有效期：', new Date(Number(expiresIn)).toLocaleString(), JSON.stringify({appSecret: wxAppSecret, expiresIn: expiresIn, accessToken,})
       );
-      await this.api.init();
       return { access_token: accessToken, expires_in: expiresIn };
     } else {
       //重新获取token并写入缓存
