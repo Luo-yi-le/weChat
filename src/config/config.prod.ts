@@ -7,13 +7,14 @@ import { MidwayConfig } from '@midwayjs/core';
 export default {
   orm: {
     type: 'mysql',
-    host: '1.15.133.109',
+    host: '175.27.158.145',
     port: 3306,
-    username: 'cool',
-    password: 'mzrWJNkKRsejJPfD',
+    username: 'admin2',
+    password: '153759.Ljx',
     database: 'cool',
     // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
-    synchronize: false,
+    synchronize: true,
+    subscribers: [],
     // 打印日志
     logging: true,
     // 字符集
@@ -21,6 +22,12 @@ export default {
   },
   cool: {
     // 是否自动导入数据库
-    initDB: false,
+    initDB: true,
+    redis: {
+      host: '175.27.158.145',
+      port: 6379,
+      password: '153759.Ljx',
+      db: 1,
+    },
   } as CoolConfig,
 } as MidwayConfig;
