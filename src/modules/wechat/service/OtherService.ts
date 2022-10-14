@@ -1,5 +1,5 @@
-import { Inject, Provide, Logger, Task, FORMAT } from '@midwayjs/decorator';
-import { BaseService, CoolCommException } from '@cool-midway/core';
+import { Inject, Provide, Logger } from '@midwayjs/decorator';
+import { BaseService } from '@cool-midway/core';
 import { ILogger } from '@midwayjs/logger';
 import { Context } from '@midwayjs/koa';
 import { wxUtil } from '../api/util';

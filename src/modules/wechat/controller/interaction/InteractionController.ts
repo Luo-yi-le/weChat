@@ -7,7 +7,6 @@ import {
   Provide,
   Query,
   Logger,
-  Param,
 } from '@midwayjs/decorator';
 import { BaseController, CoolController } from '@cool-midway/core';
 import { ILogger } from '@midwayjs/logger';

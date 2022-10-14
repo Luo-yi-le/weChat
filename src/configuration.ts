@@ -5,7 +5,7 @@ import {
   Context,
   IMidwayBaseApplication,
 } from '@midwayjs/core';
-import { Queue } from 'bullmq';
+// import { Queue } from 'bullmq';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
@@ -13,14 +13,14 @@ import { join } from 'path';
 import * as staticFile from '@midwayjs/static-file';
 import * as view from '@midwayjs/view-ejs';
 import * as orm from '@midwayjs/orm';
-import * as typeorm from '@midwayjs/typeorm';
+// import * as typeorm from '@midwayjs/typeorm';
 import * as cool from '@cool-midway/core';
 import * as file from '@cool-midway/file';
 import * as midwayTask from '@midwayjs/task';
 import * as swagger from '@midwayjs/swagger';
 import * as axios from '@midwayjs/axios';
 import * as redis from '@midwayjs/redis';
-import { QueueService } from '@midwayjs/task';
+// import { QueueService } from '@midwayjs/task';
 // import * as socketio from '@midwayjs/socketio';
 import * as task from '@cool-midway/task';
 // import * as pay from '@cool-midway/pay';

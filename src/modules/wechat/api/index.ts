@@ -13,7 +13,6 @@ import {
 } from './../../../global/types/weChat';
 import { CacheManager } from '@midwayjs/cache';
 import { wxUtil } from './util';
-import { Button } from './../entities/button';
 // import _ = require('lodash');
 
 @Provide()

@@ -1,4 +1,4 @@
-import { ALL, Body, Inject, Post, Provide } from '@midwayjs/decorator';
+import { Inject, Provide } from '@midwayjs/decorator';
 import { BaseController, CoolController } from '@cool-midway/core';
 import { WXUser } from '../../entities/user';
 import { UserService } from '../../service/UserService';

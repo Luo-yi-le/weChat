@@ -1,4 +1,4 @@
-import { Column, Index } from 'typeorm';
+import { Column } from 'typeorm';
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from './../../../global/entity/baseEntity';
 import { WX_MESSAGE_TYPE } from './../../../global/enum/wxEnum';

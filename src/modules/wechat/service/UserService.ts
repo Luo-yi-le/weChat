@@ -1,18 +1,14 @@
 import { Inject, Provide, Logger } from '@midwayjs/decorator';
-import { BaseService, CoolCommException } from '@cool-midway/core';
+import { BaseService } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { WXUser } from '../entities/user';
 import * as _ from 'lodash';
 import { Context } from '@midwayjs/koa';
-import { Validate } from '@midwayjs/validate';
 import { WeChatAPI } from '../api/index';
 import { ILogger } from '@midwayjs/logger';
 import {
-  WX_MESSAGE_TYPE,
-  WX_MESSAGE_TYPE_NAME,
   WX_SUBSCRIBE_SCENE,
-  WX_MESSAGE_EVENT,
 } from './../../../global/enum/wxEnum';
 /**
  * 微信公众号用户

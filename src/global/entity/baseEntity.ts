@@ -1,9 +1,6 @@
 import {
   Column,
   PrimaryGeneratedColumn,
-  BeforeUpdate,
-  AfterUpdate,
-  BeforeInsert,
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';

@@ -1,7 +1,7 @@
 import { Middleware } from '@midwayjs/decorator';
 import * as _ from 'lodash';
 import { NextFunction, Context } from '@midwayjs/koa';
-import { IMiddleware, IMidwayBaseApplication } from '@midwayjs/core';
+import { IMiddleware } from '@midwayjs/core';
 import { InteractionService } from '../service/InteractionService';
 /**
  * 微信中间件

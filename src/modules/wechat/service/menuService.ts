@@ -2,7 +2,7 @@ import { Inject, Provide, Logger } from '@midwayjs/decorator';
 import { BaseService } from '@cool-midway/core';
 import { ILogger } from '@midwayjs/logger';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { WXMenuEntity } from './../entities/menu';
 import * as _ from 'lodash';
 // import { Context } from '@midwayjs/koa';

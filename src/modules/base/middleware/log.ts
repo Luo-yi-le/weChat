@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { NextFunction, Context } from '@midwayjs/koa';
 import { IMiddleware } from '@midwayjs/core';
 import { BaseSysLogService } from '../service/sys/log';
-import * as jwt from 'jsonwebtoken';
+// import * as jwt from 'jsonwebtoken';
 
 /**
  * 日志中间件

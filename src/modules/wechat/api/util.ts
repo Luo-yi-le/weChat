@@ -1,9 +1,7 @@
-import { Provide, Inject, Logger } from '@midwayjs/decorator';
+import { Provide, Logger } from '@midwayjs/decorator';
 import { ILogger } from '@midwayjs/logger';
 
-import LocalizedStrings, {
-  LocalizedStringsMethods as IStrings,
-} from 'localized-strings';
+import LocalizedStrings from 'localized-strings';
 import { FormatObject } from './../../../global/types/weChat';
 import { openApi, IAPI } from './openApi';
 type Formatted = number | string;

@@ -1,11 +1,8 @@
 import { Inject, Provide, Logger } from '@midwayjs/decorator';
-import { BaseService } from '@cool-midway/core';
 import { ILogger } from '@midwayjs/logger';
 import * as _ from 'lodash';
-import { Context } from '@midwayjs/koa';
 import sha1 = require('sha1');
 import { MessageService } from './MessageService';
-import { WX_MESSAGE_TYPE_NAME } from '../../../global/enum/wxEnum';
 import { WeChatAPI } from '../api/index';
 import { WXAccountService } from '../service/accountService';
 import { CacheManager } from '@midwayjs/cache';

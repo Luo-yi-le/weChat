@@ -1,6 +1,6 @@
 import { App, Config, Inject, Middleware } from '@midwayjs/decorator';
 import * as _ from 'lodash';
-import { RESCODE } from '@cool-midway/core';
+// import { RESCODE } from '@cool-midway/core';
 import * as jwt from 'jsonwebtoken';
 import { NextFunction, Context } from '@midwayjs/koa';
 import { IMiddleware, IMidwayApplication } from '@midwayjs/core';

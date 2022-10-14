@@ -1,4 +1,4 @@
-import { ALL, Body, Inject, Post, Provide } from '@midwayjs/decorator';
+import { Inject, Post, Provide } from '@midwayjs/decorator';
 import { BaseController, CoolController } from '@cool-midway/core';
 import { OtherService } from '../../service/OtherService';
 

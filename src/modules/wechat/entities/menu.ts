@@ -1,4 +1,4 @@
-import { Column, Index, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Generated } from 'typeorm';
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from './../../../global/entity/baseEntity';
 /**

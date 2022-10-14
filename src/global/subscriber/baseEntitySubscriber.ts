@@ -1,5 +1,4 @@
 import {
-  EventSubscriber,
   EntitySubscriberInterface,
   InsertEvent,
   UpdateEvent,

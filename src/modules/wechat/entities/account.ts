@@ -1,7 +1,7 @@
-import { Column, Index, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import { Column } from 'typeorm';
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from './../../../global/entity/baseEntity';
-import { Rule, ColumnRule } from './../../../annotation/Rule';
+// import { Rule, ColumnRule } from './../../../annotation/Rule';
 
 /**
  * 微信公众号账号
