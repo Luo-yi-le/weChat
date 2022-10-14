@@ -31,14 +31,14 @@ export class WXMenuService extends BaseService {
    * @returns
    */
   public async saveOrUpdateMenu(button: Button[]) {
-    button.forEach(async (item: Button, index, array) => {
+    button.forEach(async (item: Button) => {
       if (item?.id && !item?.sub_button.length) {
         delete item?.sub_button;
-        const u = await this.updateMenu(item);
+        await this.updateMenu(item);
       } else if (item?.id && item?.sub_button.length) {
         item?.sub_button.forEach(async (sub_item: Button) => {
           if (sub_item.id) {
-            const u = await this.updateMenu(sub_item);
+            await this.updateMenu(sub_item);
           } else {
             sub_item.parentId = item.id;
             const res = await this.wxMenuEntity.save(sub_item);
@@ -68,7 +68,7 @@ export class WXMenuService extends BaseService {
         sub_button: [],
       });
       if (b?.sub_button && b?.sub_button.length) {
-        b?.sub_button.forEach((sub_button, index) => {
+        b?.sub_button.forEach((sub_button,) => {
           switch (sub_button.type) {
             case 'click':
               button[bindex].sub_button.push({
