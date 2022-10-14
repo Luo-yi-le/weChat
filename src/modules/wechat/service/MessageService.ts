@@ -8,7 +8,7 @@ import { WXMessageEntity } from '../entities/message';
 import { WXUser } from '../entities/user';
 import { WeChatAPI } from '../api/index';
 import { CoreMessage } from '../core/message/coreMessage';
-import { XMLHelper, XML, Context as XMLContext } from './../core/xml/xmlHelper';
+import { XMLHelper, Context as XMLContext } from './../core/xml/xmlHelper';
 import { UserService } from './UserService';
 import { CacheManager } from '@midwayjs/cache';
 
