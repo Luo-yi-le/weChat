@@ -121,8 +121,5 @@ type Types =
   | 'string'
   | 'symbol';
 
-interface Type {
-  Array: any;
-}
 
 export const ColumnRule: ColumnOptions = new Column();
