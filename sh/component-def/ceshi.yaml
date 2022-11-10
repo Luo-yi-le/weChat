@@ -8,7 +8,7 @@ spec:
   type: SERVICE
   workload:
     kube:
-      template: cmd
+      template: sh ./app.sh
   customVariables:
   - name: sh
     description: ''
