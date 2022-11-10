@@ -1,0 +1,16 @@
+metadata:
+  name: team-config
+apiVersion: cd.coding.net/v1alpha1
+kind: GitSource
+spec:
+  git:
+    url: https://e.coding.net/wulingshan/wechat/weChat.git
+    cred: git
+    ref:
+      branch: master
+  templateRenderer:
+    engine: Orbit
+    path: /sh
+    files:
+    - values.yaml
+  interval: 1m
