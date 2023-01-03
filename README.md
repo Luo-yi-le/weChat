@@ -1,32 +1,48 @@
-应用仓库中的目录格式以及意义如下所示：
-```.
-├── application-id.yaml #应用定义，启动顺序
-├── components
-│   ├── component-A.yaml #服务定义
-│   └── component-B.yaml
-├── configs
-│   └── configmap-A.yaml #配置定义
-├── dashboards
-│   └── app-dashboard-A.yaml #应用级自定义监控面板
-├── db-migrations
-│   ├── ${db}
-│   │   └── $timestamp.sql #数据库变更脚本
-│   └── snapshot.yaml #数据库模型的结构化快照
-├── environments
-│   ├── prod
-│   │   ├── component-configs
-│   │   │   └── component-A.yaml #环境中-服务配置覆盖
-│   │   ├── dashboards
-│   │   │   └── dashboard-B.yaml #环境级自定义监控面板
-│   │   └── env-prod.yaml #环境定义
-│   └── testing
-│       ├── configs
-│       │   └── configmap-A.yaml #环境中-配置文件覆盖
-│       └── env-testing.yaml
-├── pipelines
-│   └── pipeline-A.yaml #部署流程 
-├── strategies
-│   └── canary.yaml #部署策略
-└── versions
-    └── ${versionId}.yaml #版本定义，包含应用镜像变更，数据库变更文件和顺序
+# WeChat 整合微信公众号、微信小商店等接口
+
+## 运行
+```node
+yarn install
+yarn run dev
 ```
+### 访问地址
+http://127.0.0.1:8001/
+
+## Swagger
+http://127.0.0.1:8001/swagger-ui/index.html
+
+### Swagger 启动之后
+http://127.0.0.1:8001/swagger-ui/index.json
+
+#### 修改数据库配置，配置文件位于`src/config/config.local.ts`
+数据库为mysql(`>=5.7版本`)，node版本(`>=12.x`)，首次启动会自动初始化并导入数据
+
+```js
+config.orm = {
+    type: 'mysql',
+    host: '127.0.0.1',
+    port: 3306,
+    username: 'root',
+    password: '',
+    database: 'cool-admin',
+    synchronize: true,
+    logging: true,
+}
+```
+
+### 部署
+
+```bash
+$ yarn start
+$ yarn stop
+```
+
+### 内置指令
+- 使用 `yarn run lint:fix` 用来格式代码。
+- 使用 `yarn run lint` 来做代码风格检查。
+- 使用 `yarn test` 来执行单元测试。
+
+
+### 启动redis
+- redis-server.exe
+- redis-cli.exe -h 127.0.0.1 -p 6379

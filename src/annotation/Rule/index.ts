@@ -121,5 +121,4 @@ type Types =
   | 'string'
   | 'symbol';
 
-
 export const ColumnRule: ColumnOptions = new Column();

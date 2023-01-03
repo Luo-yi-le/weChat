@@ -20,13 +20,15 @@ import * as midwayTask from '@midwayjs/task';
 import * as swagger from '@midwayjs/swagger';
 import * as axios from '@midwayjs/axios';
 import * as redis from '@midwayjs/redis';
+import * as cache from '@midwayjs/cache';
+import * as upload from '@midwayjs/upload';
 // import { QueueService } from '@midwayjs/task';
 // import * as socketio from '@midwayjs/socketio';
 import * as task from '@cool-midway/task';
 // import * as pay from '@cool-midway/pay';
 // import * as es from '@cool-midway/es';
 // import * as rpc from '@cool-midway/rpc';
-
+// import * as captcha from '@midwayjs/captcha';
 @Configuration({
   imports: [
     // http://koajs.cn/
@@ -45,7 +47,6 @@ import * as task from '@cool-midway/task';
     // socketio,
     // cool-admin 官方组件 https://www.cool-js.com
     cool,
-    // typeorm,
     // 文件上传 阿里云存储 腾讯云存储 七牛云存储
     file,
     // 导入Http组件
@@ -53,6 +54,8 @@ import * as task from '@cool-midway/task';
     redis,
     swagger,
     midwayTask,
+    cache,
+    // upload,
     // 任务与队列
     // task,
     // 支付 微信与支付宝
@@ -61,6 +64,8 @@ import * as task from '@cool-midway/task';
     // es,
     // rpc 微服务 远程调用
     // rpc,
+    // 验证码
+    // captcha,
     {
       component: info,
       enabledEnvironment: ['local'],
@@ -75,7 +80,21 @@ export class ContainerLifeCycle implements ILifeCycle {
     container: IMidwayContainer,
     mainApp?: IMidwayBaseApplication<Context>
   ): Promise<any> {}
-  async onReady(container?: IMidwayContainer) {}
+  async onReady(container?: IMidwayContainer) {
+    const httpServiceFactory = await container.getAsync(
+      axios.HttpServiceFactory
+    );
+
+    const wechatAxios = httpServiceFactory.get('wechatAxios');
+    wechatAxios.interceptors.request.use(
+      config => {
+        return config;
+      },
+      error => {
+        return Promise.reject(error);
+      }
+    );
+  }
 
   // 应用停止
   async onStop() {}

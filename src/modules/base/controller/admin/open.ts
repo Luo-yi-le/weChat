@@ -58,9 +58,15 @@ export class BaseOpenController extends BaseController {
   async captcha(
     @Query('type') type: string,
     @Query('width') width: number,
-    @Query('height') height: number
+    @Query('height') height: number,
+    @Query('ignoreChars') ignoreChars: string
   ) {
-    return this.ok(await this.baseSysLoginService.captcha(type, width, height));
+    if (!ignoreChars) {
+      ignoreChars = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
+    }
+    return this.ok(
+      await this.baseSysLoginService.captcha(type, width, height, ignoreChars)
+    );
   }
 
   /**

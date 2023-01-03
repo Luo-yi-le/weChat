@@ -2,25 +2,18 @@ import { CoolConfig } from '@cool-midway/core';
 import { MODETYPE } from '@cool-midway/file';
 import { MidwayConfig } from '@midwayjs/core';
 import * as redisStore from 'cache-manager-ioredis';
+import { join } from 'path';
 // import * as fsStore from 'cache-manager-fs-hash';
 import { BaseEntitySubscriber } from './../global/subscriber/baseEntitySubscriber';
+import axiosConfig from './axios.config';
+import loggerConfig from './logger.config';
+import * as moment from 'moment';
 
 const redis = {
   port: 6379, // Redis port
   host: '175.27.158.145', // Redis host
   password: '153759.Ljx',
   db: 1,
-};
-
-const logger = {
-  maxFiles: '3d',
-  fileLogName: 'wechat.log',
-  enableConsole: false,
-  level: 'warn',
-  maxSize: '100m',
-  format: info => {
-    return `${info.timestamp} ${info.LEVEL} ${info.pid} ${info.labelText}${info.message}`;
-  },
 };
 
 export default {
@@ -35,17 +28,8 @@ export default {
       subscribers: [BaseEntitySubscriber],
     },
   },
-  midwayLogger: {
-    default: {
-      maxFiles: '3d',
-      maxSize: '100m',
-    },
-    clients: {
-      wechat: Object.assign({}, logger, { fileLogName: 'wechat.log' }),
-      base: Object.assign({}, logger, { fileLogName: 'base.log' }),
-      task: Object.assign({}, logger, { fileLogName: 'task.log' }),
-    },
-  },
+  axios: axiosConfig,
+  midwayLogger: loggerConfig,
   bodyParser: {
     enableTypes: ['json', 'form', 'text', 'xml'],
     formLimit: '1mb',
@@ -56,6 +40,10 @@ export default {
   // 文件上传
   upload: {
     fileSize: '200mb',
+    mode: 'file',
+    whitelist: null,
+    base64: false,
+    tmpdir: join('public/uploads/', moment().format('YYYYMMDD')),
   },
   // 模板渲染
   view: {

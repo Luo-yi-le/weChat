@@ -7,7 +7,7 @@ import { ILogger } from '@midwayjs/logger';
  */
 @Provide()
 export class TaskDemoService extends BaseService {
-  @Logger()
+  @Logger('taskLogger')
   logger: ILogger;
   /**
    * 描述

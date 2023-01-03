@@ -1,8 +1,4 @@
-import {
-  EntitySubscriberInterface,
-  InsertEvent,
-  UpdateEvent,
-} from 'typeorm';
+import { EntitySubscriberInterface, InsertEvent, UpdateEvent } from 'typeorm';
 import { EventSubscriberModel } from '@midwayjs/orm';
 import { BaseEntity } from './../entity/baseEntity';
 /**

@@ -10,10 +10,4 @@ import { OtherService } from '../../service/OtherService';
 export class WXOtherController extends BaseController {
   @Inject()
   otherService: OtherService;
-
-  @Post('/qrcode')
-  async qrcode() {
-    const qrcode = await this.otherService.createQrCode();
-    return this.ok(qrcode);
-  }
 }

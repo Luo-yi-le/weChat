@@ -1,6 +1,4 @@
-import { Inject, Provide, Logger } from '@midwayjs/decorator';
-import { BaseService } from '@cool-midway/core';
-import { ILogger } from '@midwayjs/logger';
+import { Provide } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { WXMenuEntity } from './../entities/menu';
@@ -13,15 +11,9 @@ import { WeChatAPI } from '../api/index';
  * 微信公众号菜单
  */
 @Provide()
-export class WXMenuService extends BaseService {
+export class WXMenuService extends WeChatAPI {
   @InjectEntityModel(WXMenuEntity)
   wxMenuEntity: Repository<WXMenuEntity>;
-
-  @Logger('wechat')
-  logger: ILogger;
-
-  @Inject()
-  api: WeChatAPI;
 
   /**
    * 如果有id 并 sub_button为空
@@ -42,7 +34,7 @@ export class WXMenuService extends BaseService {
           } else {
             sub_item.parentId = item.id;
             const res = await this.wxMenuEntity.save(sub_item);
-            this.logger.info('保存菜单：', res);
+            this.wechatLogger.info('保存菜单：', res);
           }
         });
       } else if (!item?.id && item?.sub_button.length) {
@@ -52,7 +44,7 @@ export class WXMenuService extends BaseService {
         sub_button.forEach(async (sub_item: Button) => {
           sub_item.parentId = menu.id;
           const res = await this.wxMenuEntity.save(sub_item);
-          this.logger.info('保存菜单：', res);
+          this.wechatLogger.info('保存菜单：', res);
         });
       }
     });
@@ -68,7 +60,7 @@ export class WXMenuService extends BaseService {
         sub_button: [],
       });
       if (b?.sub_button && b?.sub_button.length) {
-        b?.sub_button.forEach((sub_button,) => {
+        b?.sub_button.forEach(sub_button => {
           switch (sub_button.type) {
             case 'click':
               button[bindex].sub_button.push({
@@ -121,14 +113,14 @@ export class WXMenuService extends BaseService {
         }
       }
     });
-    const res = await this.api.createDefineMenu({ button: button });
+    const res = await this.createDefineMenu({ button: button });
     return res;
   }
   public async updateMenu(button: Button) {
     const findOne = await this.wxMenuEntity.findOne({ id: button.id });
     // eslint-disable-next-line prettier/prettier
     const res = await this.wxMenuEntity.update(button.id, Object.assign({}, findOne, button));
-    this.logger.info('更新菜单：', res);
+    this.wechatLogger.info('更新菜单：', res);
     return res;
   }
 

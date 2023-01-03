@@ -26,8 +26,8 @@ export class TaskInfoService extends BaseService {
   @InjectEntityModel(TaskInfoEntity)
   taskInfoEntity: Repository<TaskInfoEntity>;
 
-  @Logger()
-  logger: ILogger;
+  @Logger('taskLogger')
+  taskLogger: ILogger;
 
   @InjectEntityModel(TaskLogEntity)
   taskLogEntity: Repository<TaskLogEntity>;
@@ -252,7 +252,7 @@ export class TaskInfoService extends BaseService {
         for (const task of runningTasks) {
           const job = await this.exist(task.id); // 任务已存在就不添加
           if (!job) {
-            this.logger.info(`init task ${task.name}`);
+            this.taskLogger.info(`init task ${task.name}`);
             await this.addOrUpdate(task);
           }
         }

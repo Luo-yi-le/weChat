@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Inject,
-  Logger,
-} from '@midwayjs/decorator';
+import { Controller, Get, Inject, Logger } from '@midwayjs/decorator';
 import { Context } from '@midwayjs/koa';
 import { ILogger } from '@midwayjs/logger';
 
@@ -12,7 +7,7 @@ import { ILogger } from '@midwayjs/logger';
  */
 @Controller('/')
 export class WelcomeController {
-  @Logger()
+  @Logger('baseLogger')
   logger: ILogger;
 
   @Inject()

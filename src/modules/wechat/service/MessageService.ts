@@ -1,8 +1,6 @@
-import { Inject, Provide, Logger } from '@midwayjs/decorator';
-import { BaseService } from '@cool-midway/core';
+import { Inject, Provide } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import { ILogger } from '@midwayjs/logger';
 import { Context } from '@midwayjs/koa';
 import { WXMessageEntity } from '../entities/message';
 import { WXUser } from '../entities/user';
@@ -22,18 +20,12 @@ import {
  * 微信消息处理
  */
 @Provide()
-export class MessageService extends BaseService {
+export class MessageService extends WeChatAPI {
   @Inject()
   ctx: Context;
 
-  @Logger('wechat')
-  logger: ILogger;
-
   @Inject()
   cacheManager: CacheManager;
-
-  @Inject()
-  api: WeChatAPI;
 
   @Inject()
   coreMessage: CoreMessage;
@@ -45,7 +37,7 @@ export class MessageService extends BaseService {
   userService: UserService;
 
   @InjectEntityModel(WXMessageEntity)
-  message: Repository<WXMessageEntity>;
+  wxMessageEntity: Repository<WXMessageEntity>;
 
   xmlPars: XMLContext;
 
@@ -54,8 +46,6 @@ export class MessageService extends BaseService {
    * @param message
    */
   async start(message: any, openid?: string) {
-    await this.api.init();
-
     const { xml } = await this.xmlHelper.parse(message, {
       trim: true,
     });
@@ -65,11 +55,11 @@ export class MessageService extends BaseService {
       name: WX_MESSAGE_TYPE_NAME[this.xmlPars.MsgType[0]],
     });
 
-    const wxuser: WXUser = await this.api.fetchUserInfo(msg.FromUserName);
+    const wxuser: WXUser = await this.fetchUserInfo(msg.FromUserName);
     if (wxuser && wxuser?.openid) {
       await this.userService.addWXUser(wxuser);
     }
-    await this.message.save(msg);
+    await this.wxMessageEntity.save(msg);
     if (this[this.xmlPars.MsgType[0]]) {
       return await this[this.xmlPars.MsgType[0]](this.xmlPars);
     }
@@ -77,7 +67,7 @@ export class MessageService extends BaseService {
   }
 
   async add(message: WXMessageEntity) {
-    await this.message.save(message);
+    await this.wxMessageEntity.save(message);
     return message.id;
   }
 

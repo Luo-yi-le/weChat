@@ -1,4 +1,10 @@
-import { Column } from 'typeorm';
+import {
+  Column,
+  Generated,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryColumn,
+} from 'typeorm';
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from './../../../global/entity/baseEntity';
 import { WX_SUBSCRIBE_SCENE } from './../../../global/enum/wxEnum';
@@ -7,14 +13,37 @@ import { WX_SUBSCRIBE_SCENE } from './../../../global/enum/wxEnum';
  */
 @EntityModel('wechat_user')
 export class WXUser extends BaseEntity {
-  @Column({ comment: '用户的标识，对当前公众号唯一' })
+  @Generated('uuid')
+  id?: string;
+
+  @Column({ comment: '别名', nullable: true })
+  name?: string;
+
+  @CreateDateColumn({
+    nullable: false,
+    comment: '创建时间',
+    type: 'timestamp',
+  })
+  createTime?: Date;
+
+  @UpdateDateColumn({
+    nullable: false,
+    comment: '更改时间',
+    type: 'timestamp',
+  })
+  updateTime?: Date;
+
+  @PrimaryColumn()
   openid?: string;
 
   @Column({ comment: '用户昵称', nullable: true })
   nickname?: string;
 
-  @Column({ comment: '用户性别', nullable: true })
-  sex?: number;
+  @Column({
+    comment: '用户性别',
+    nullable: true,
+  })
+  sex?: string;
 
   @Column({ comment: '头像', nullable: true })
   headimgurl?: string;
@@ -82,4 +111,7 @@ export class WXUser extends BaseEntity {
 
   @Column({ comment: '二维码扫码场景描述（开发者自定义）', nullable: true })
   qr_scene_str?: string;
+
+  @Column({ comment: '绑定手机号码', nullable: true })
+  phoneNumber?: string;
 }

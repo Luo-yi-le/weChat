@@ -11,65 +11,65 @@ export enum openApi {
   /**
    * 批量获取用户基本信息
    */
-  userInfoList = 'https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token={0}',
+  userInfoList = '/cgi-bin/user/info/batchget?access_token={0}',
 
   /**
    * 获取单个用户基本信息
    */
-  userInfo = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token={0}&openid={1}&lang=zh_CN',
+  userInfo = '/cgi-bin/user/info?access_token={0}&lang=zh_CN',
 
   /**
    * 获取token
    */
-  accToken = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}',
+  accToken = '/cgi-bin/token?grant_type=client_credential',
 
   /**
    * 创建菜单
    */
-  createMenu = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token={0}',
-  selfMenu = 'https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token={0}',
-  deleteMenu = 'https://api.weixin.qq.com/cgi-bin/menu/delete?access_token={0}',
-  addconditional = 'https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token={0}',
-  getMenu = 'https://api.weixin.qq.com/cgi-bin/menu/get?access_token={0}',
+  createMenu = '/cgi-bin/menu/create?access_token={0}',
+  selfMenu = '/cgi-bin/get_current_selfmenu_info?access_token={0}',
+  deleteMenu = '/cgi-bin/menu/delete?access_token={0}',
+  addconditional = '/cgi-bin/menu/addconditional?access_token={0}',
+  getMenu = '/cgi-bin/menu/get?access_token={0}',
 
-  qrcode = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}',
+  qrcode = '/cgi-bin/qrcode/create?access_token={0}',
   showqrcode = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={0}',
 
-  ip = 'https://api.weixin.qq.com/cgi-bin/get_api_domain_ip?access_token={0}',
+  ip = '/cgi-bin/get_api_domain_ip?access_token={0}',
 
-  clearQuota = 'https://api.weixin.qq.com/cgi-bin/clear_quota?access_token={0}',
-  getQuota = 'https://api.weixin.qq.com/cgi-bin/openapi/quota/get?access_token={0}',
+  clearQuota = '/cgi-bin/clear_quota?access_token={0}',
+  getQuota = '/cgi-bin/openapi/quota/get?access_token={0}',
 
-  getFun = 'https://api.weixin.qq.com/cgi-bin/user/get?access_token={0}&next_openid={1}',
+  getFun = '/cgi-bin/user/get?access_token={0}',
 
-  setFunName = 'https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token={0}',
-  createTags = 'https://api.weixin.qq.com/cgi-bin/tags/create?access_token={0}',
-  getTags = 'https://api.weixin.qq.com/cgi-bin/tags/get?access_token={0}',
-  updateTags = 'https://api.weixin.qq.com/cgi-bin/tags/update?access_token={0}',
-  deleteTags = 'https://api.weixin.qq.com/cgi-bin/tags/delete?access_token={0}',
+  setFunName = '/cgi-bin/user/info/updateremark?access_token={0}',
+  createTags = '/cgi-bin/tags/create?access_token={0}',
+  getTags = '/cgi-bin/tags/get?access_token={0}',
+  updateTags = '/cgi-bin/tags/update?access_token={0}',
+  deleteTags = '/cgi-bin/tags/delete?access_token={0}',
 
   /**
    * 获取标签下粉丝列表
    */
-  getTagsFunList = 'https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token={0}',
+  getTagsFunList = '/cgi-bin/user/tag/get?access_token={0}',
 
   /**
    * 批量为用户打标签.
    * 标签功能目前支持公众号为用户打上最多20个标签。
    */
-  setBatchtagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token={0}',
+  setBatchtagging = '/cgi-bin/tags/members/batchtagging?access_token={0}',
 
   /**
    * 批量为用户取消标签.
    * 标签功能目前支持公众号为用户打上最多20个标签。
    */
-  setBatchuntagging = 'https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token={0}',
+  setBatchuntagging = '/cgi-bin/tags/members/batchuntagging?access_token={0}',
 
   /**
    * 批量为用户取消标签.
    * 标签功能目前支持公众号为用户打上最多20个标签。
    */
-  getidlist = 'https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token={0}',
+  getidlist = '/cgi-bin/tags/getidlist?access_token={0}',
 
-  getTicketOfJsApi = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={0}&type=jsapi',
+  getTicketOfJsApi = '/cgi-bin/ticket/getticket?access_token={0}',
 }

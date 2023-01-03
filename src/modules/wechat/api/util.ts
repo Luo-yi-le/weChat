@@ -1,8 +1,6 @@
-import { Provide, Logger } from '@midwayjs/decorator';
-import { ILogger } from '@midwayjs/logger';
-
+import { Provide } from '@midwayjs/decorator';
 import LocalizedStrings from 'localized-strings';
-import { FormatObject } from './../../../global/types/weChat';
+import { IWeChat } from './../../../global/types/weChat';
 import { openApi, IAPI } from './openApi';
 type Formatted = number | string;
 type T = Formatted;
@@ -12,15 +10,17 @@ type T = Formatted;
  */
 @Provide()
 export class wxUtil {
-  @Logger('wechat')
-  logger: ILogger;
+  IAPI: IAPI;
   /**
    * 占位符替换
    * @param str 替换的字符串
    * @param values 替换的值
    * @returns string
    */
-  public formatString(str: string, ...values: (T | FormatObject<T>)[]): string {
+  public formatString(
+    str: string,
+    ...values: (T | IWeChat.FormatObject<T>)[]
+  ): string {
     try {
       return new LocalizedStrings({ en: {} })
         .formatString(str, ...values)
@@ -38,7 +38,7 @@ export class wxUtil {
    * @param values 替换的值
    * @returns string
    */
-  formatOpenApi(key: IAPI, ...values: (T | FormatObject<T>)[]) {
+  formatOpenApi(key: IAPI, ...values: (T | IWeChat.FormatObject<T>)[]) {
     return this.formatString(openApi[key], ...values);
   }
 
@@ -49,22 +49,5 @@ export class wxUtil {
    */
   getOpenApi(key: IAPI) {
     return openApi[key];
-  }
-
-  /**
-   * 处理请求数据
-   * @param response 请求数据
-   * @param url 请求链接
-   * @param errMsg 自定义错误信息
-   * @returns
-   */
-  httpServiceResponse(response, url: string, errMsg?: string) {
-    if (response && response.data) {
-      this.logger.info('微信接口: ', url, response.data);
-      return response.data;
-    } else {
-      this.logger.error('微信接口' + errMsg + ': ' + response.data);
-      return new Error(response.data);
-    }
   }
 }

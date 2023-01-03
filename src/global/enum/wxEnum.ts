@@ -1,4 +1,14 @@
 // eslint-disable-next-line prettier/prettier
+
+/**
+ * 用户性别
+ */
+export enum GENDER_TYPE {
+  '男',
+  '女',
+  '其他',
+}
+
 /**
  * 微信公众号消息类型
  */

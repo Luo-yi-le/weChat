@@ -6,10 +6,8 @@ import {
   Get,
   Provide,
   Query,
-  Logger,
 } from '@midwayjs/decorator';
 import { BaseController, CoolController } from '@cool-midway/core';
-import { ILogger } from '@midwayjs/logger';
 import { Context } from '@midwayjs/koa';
 import { InteractionService } from '../../service/InteractionService';
 /**
@@ -18,16 +16,13 @@ import { InteractionService } from '../../service/InteractionService';
 @Provide()
 @CoolController('/interaction')
 export class InteractionController extends BaseController {
-  @Logger('wechat')
-  logger: ILogger;
-
   @Inject()
   interactionService: InteractionService;
 
   @Inject()
   ctx: Context;
 
-  @Get('/action')
+  @Get('/action', { summary: '针对微信公众号get请求' })
   public async action(
     @Query('signature') signature: string,
     @Query('nonce') nonce: string,
@@ -46,7 +41,7 @@ export class InteractionController extends BaseController {
     this.ctx.body = reslut;
   }
 
-  @Post('/action')
+  @Post('/action', { summary: '针对微信公众号psot请求' })
   // eslint-disable-next-line prettier/prettier
   public async interaction(@Query(ALL) query: any, @Body(ALL) params: any) {
     const message = await this.interactionService.action(
@@ -61,12 +56,18 @@ export class InteractionController extends BaseController {
     this.ctx.body = message;
   }
 
-  @Get('/loadConfigData')
+  @Get('/loadConfigData', { summary: '获取公众号配置权限' })
   public async loadConfigData(
     @Query('url') url?: string,
     @Query('type') type?: string
   ) {
     const res = await this.interactionService.loadConfigData(url, type);
     return this.ok(res);
+  }
+
+  @Post('/qrcode', { summary: '获取微信二维码' })
+  async qrcode() {
+    const qrcode = await this.interactionService.createQrCode();
+    return this.ok(qrcode);
   }
 }

@@ -61,43 +61,52 @@ export class BaseSysLoginService extends BaseService {
       } else {
         throw new CoolCommException('账户或密码不正确~');
       }
-      // 校验角色
-      const roleIds = await this.baseSysRoleService.getByUser(user.id);
-      if (_.isEmpty(roleIds)) {
-        throw new CoolCommException('该用户未设置任何角色，无法登录~');
-      }
-
-      // 生成token
-      const { expire, refreshExpire } = this.coolConfig.jwt.token;
-      const result = {
-        expire,
-        token: await this.generateToken(user, roleIds, expire),
-        refreshExpire,
-        refreshToken: await this.generateToken(
-          user,
-          roleIds,
-          refreshExpire,
-          true
-        ),
-      };
-
-      // 将用户相关信息保存到缓存
-      const perms = await this.baseSysMenuService.getPerms(roleIds);
-      const departments = await this.baseSysDepartmentService.getByRoleIds(
-        roleIds,
-        user.username === 'admin'
-      );
-      await this.cacheManager.set(`admin:department:${user.id}`, departments);
-      await this.cacheManager.set(`admin:perms:${user.id}`, perms);
-      await this.cacheManager.set(`admin:token:${user.id}`, result.token);
-      await this.cacheManager.set(
-        `admin:token:refresh:${user.id}`,
-        result.token
-      );
-
-      return result;
+      return await this.check(user);
     } else {
       throw new CoolCommException('验证码不正确');
+    }
+  }
+
+  async check(user: BaseSysUserEntity) {
+    // 校验角色
+    const roleIds = await this.baseSysRoleService.getByUser(user.id);
+    if (_.isEmpty(roleIds)) {
+      throw new CoolCommException('该用户未设置任何角色，无法登录~');
+    }
+
+    // 生成token
+    const { expire, refreshExpire } = this.coolConfig.jwt.token;
+    const result = {
+      expire,
+      token: await this.generateToken(user, roleIds, expire),
+      refreshExpire,
+      refreshToken: await this.generateToken(
+        user,
+        roleIds,
+        refreshExpire,
+        true
+      ),
+    };
+
+    // 将用户相关信息保存到缓存
+    const perms = await this.baseSysMenuService.getPerms(roleIds);
+    const departments = await this.baseSysDepartmentService.getByRoleIds(
+      roleIds,
+      user.username === 'admin'
+    );
+    await this.cacheManager.set(`admin:department:${user.id}`, departments);
+    await this.cacheManager.set(`admin:perms:${user.id}`, perms);
+    await this.cacheManager.set(`admin:token:${user.id}`, result.token);
+    await this.cacheManager.set(`admin:token:refresh:${user.id}`, result.token);
+
+    return result;
+  }
+
+  async phoneLogin(phone: string) {
+    if (phone) {
+      const user = await this.baseSysUserEntity.findOne({ phone });
+      // 校验角色
+      return await this.check(user);
     }
   }
 
@@ -106,10 +115,16 @@ export class BaseSysLoginService extends BaseService {
    * @param type 图片验证码类型 svg
    * @param width 宽
    * @param height 高
+   * @param ignoreChars 忽略字符
    */
-  async captcha(type: string, width = 150, height = 50) {
+  async captcha(
+    type: string,
+    width = 150,
+    height = 50,
+    ignoreChars = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
+  ) {
     const svg = svgCaptcha.create({
-      ignoreChars: 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM',
+      ignoreChars: ignoreChars.toLowerCase(),
       width,
       height,
     });

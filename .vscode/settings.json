@@ -2,5 +2,6 @@
     "wxcloud.containerDebug.appid": "wxb1f9e69085508470",
     "wxcloud.containerDebug.cliKey": "AAQ9G7sEAAABAAAAAABKHuy7F3InQpzYNhJRYiAAAAAraAdzKm8i8JwFJ68cDOJBtIHsmv3F8e00LCv7f+tYvqrKaq1vaIfuIUc/2f7TVaXQDjbGRW8LjCXyzLn/BDtr8w8o1ghWwyhcJxSU/U/kdrgJzUqq9beB/4ukirSqyZzuZl6ukBkru37tr3jJTqpAKn3JV03+DcK6zLE=",
     "wxcloud.containerDebug.VPC ProxyNodes": "https://express-smsd-1797779-1258908643.ap-shanghai.run.tcloudbase.com/",
-    "wxcloud.containerDebug.VPC ProxyTargetEnvID": "wulingshan-test-0ghfhzi5387561e1"
+    "wxcloud.containerDebug.VPC ProxyTargetEnvID": "wulingshan-test-0ghfhzi5387561e1",
+    "compile-hero.disable-compile-files-on-did-save-code": true
 }

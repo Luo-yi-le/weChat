@@ -12,8 +12,8 @@ import { UUID } from './../../../global/utils/index';
 
 @Provide()
 export class InteractionService {
-  @Logger('wechat')
-  logger: ILogger;
+  @Logger('wechatLogger')
+  wechatLogger: ILogger;
 
   @Inject()
   redisService: RedisService;
@@ -55,9 +55,9 @@ export class InteractionService {
         },
       };
     } else if (request && request?.body && !signature && openid) {
-      this.logger.info('接受微信消息：', request.body);
+      this.wechatLogger.info('接受微信消息：', request.body);
       message = await this.messageService.start(request.body, openid);
-      this.logger.info('发送微信消息：', message);
+      this.wechatLogger.info('发送微信消息：', message);
     }
     return new Promise((resolve, reject) => {
       if (request && request?.body && !signature) {
@@ -70,12 +70,12 @@ export class InteractionService {
           try {
             resolve(echostr + '');
           } catch (error) {
-            this.logger.error('微信服务器发起请求异常', error);
+            this.wechatLogger.error('微信服务器发起请求异常', error);
           }
         } else {
           reject('wrong');
         }
-        this.logger.info('微信服务器发起请求结束----');
+        this.wechatLogger.info('微信服务器发起请求结束----');
       }
     });
   }
@@ -87,14 +87,14 @@ export class InteractionService {
   public async token() {
     const wxAppSecret = this.wxutil.getOpenApi('wxAppSecret');
     // eslint-disable-next-line prettier/prettier
-    const accessToken = await this.cacheManager.get(`wechat:accessToken:${wxAppSecret}`) || '';
+    const accessToken = await this.cacheManager.get('wechat:accessToken') || '';
     // eslint-disable-next-line prettier/prettier
-    const expiresIn = await this.cacheManager.get(`wechat:accessTokenExpiresIn:${wxAppSecret}`) || 0;
+    const expiresIn = await this.cacheManager.get('wechat:accessTokenExpiresIn') || 0;
     await this.api.init();
     // eslint-disable-next-line prettier/prettier
     if (accessToken && expiresIn && Number(expiresIn) > new Date().getTime()) { //判断是否存在缓存或者过期
       // eslint-disable-next-line prettier/prettier
-      this.logger.info('accessToken信息有有效期：', new Date(Number(expiresIn)).toLocaleString(), JSON.stringify({appSecret: wxAppSecret, expiresIn: expiresIn, accessToken,})
+      this.wechatLogger.info('accessToken信息有有效期：', new Date(Number(expiresIn)).toLocaleString(), JSON.stringify({appSecret: wxAppSecret, expiresIn: expiresIn, accessToken,})
       );
       return { access_token: accessToken, expires_in: expiresIn };
     } else {
@@ -108,16 +108,16 @@ export class InteractionService {
           expiresIn: new Date().getTime() + (res.expires_in - 60) * 1000, //减去60秒 增加重新请求时间
         });
         // eslint-disable-next-line prettier/prettier
-        await this.cacheManager.set(`wechat:accessToken:${wxAppSecret}`, res.access_token, { ttl: res.expires_in - 60 });
+        await this.cacheManager.set('wechat:accessToken', res.access_token, { ttl: res.expires_in - 60 });
         // eslint-disable-next-line prettier/prettier
-        await this.cacheManager.set(`wechat:accessTokenExpiresIn:${wxAppSecret}`, param.expiresIn, { ttl: res.expires_in - 60 });
+        await this.cacheManager.set('wechat:accessTokenExpiresIn', param.expiresIn, { ttl: res.expires_in - 60 });
         await this.wxAccountService.updateAccessToken(param);
         // eslint-disable-next-line prettier/prettier
-        this.logger.info('重新获取accessToken，有效期', new Date(param.expiresIn).toLocaleString(), JSON.stringify(param));
+        this.wechatLogger.info('重新获取accessToken，有效期', new Date(param.expiresIn).toLocaleString(), JSON.stringify(param));
         await this.api.init();
         return { access_token: res.access_token, expires_in: param.expiresIn };
       } else {
-        this.logger.error('获取accessToken错误：', res);
+        this.wechatLogger.error('获取accessToken错误：', res);
         return new Error('获取accessToken错误: ' + res);
       }
     }
@@ -156,5 +156,11 @@ export class InteractionService {
       appId: this.api.appID,
       appSecret: this.api.appSecret,
     };
+  }
+
+  async createQrCode() {
+    await this.api.init();
+    const qrcode = await this.api.getWeChatQrcode();
+    return qrcode;
   }
 }
