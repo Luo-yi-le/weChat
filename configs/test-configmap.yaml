@@ -1,9 +1,0 @@
-metadata:
-  name: test
-  annotations:
-    cd.coding.net/updateBy: '8674184'
-    cd.coding.net/updateTime: '1668057266583'
-apiVersion: v1
-data: {
-  }
-kind: ConfigMap
