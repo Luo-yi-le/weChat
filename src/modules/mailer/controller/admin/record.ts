@@ -1,14 +1,15 @@
 import { Inject, Provide, Post, Body, ALL } from '@midwayjs/decorator';
-import { BaseController, CoolController } from '@cool-midway/core';
+import { CoolController } from '@cool-midway/core';
 import { MailerRecordService } from '../../service/recordService';
 import { MailerRecord } from '../../entities/record';
+import { BaseController } from '../../../../global/controller/BaseController';
 
 /**
  * 发送邮箱记录
  */
 @Provide()
 @CoolController({
-  api: ['add', 'delete', 'update', 'list', 'page'],
+  api: ['add', 'delete', 'update', 'list', 'page', 'info'],
   entity: MailerRecord,
   service: MailerRecordService,
 })

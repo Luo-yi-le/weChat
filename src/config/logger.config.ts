@@ -1,3 +1,5 @@
+import { IMidwayLogger, MidwayTransformableInfo } from "@midwayjs/logger";
+
 const logger = {
   maxFiles: '3d',
   enableConsole: true,
@@ -7,7 +9,7 @@ const logger = {
   enableError: true,
   enableJSON: false,
   maxSize: '100m',
-  format: info => {
+  format: (info: MidwayTransformableInfo, logger?: IMidwayLogger) => {
     return `${info.timestamp} ${info.LEVEL} ${info.pid} ${info.labelText}${info.message}`;
   },
 };

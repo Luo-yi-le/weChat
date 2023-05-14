@@ -16,7 +16,7 @@
     "ci": "npm run cov",
     "build": "midway-bin build -c",
     "ts-node-test": "node --loader ts-node/esm ./src/global/comm/format/index.ts",
-    "lt": "lt --port 8001 --subdomain wulingshan"
+    "lt": "lt --port 8091 --subdomain wulingshan"
   },
   "author": "wulingshan",
   "license": "Apache-2.0",

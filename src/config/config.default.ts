@@ -7,12 +7,13 @@ import { join } from 'path';
 import { BaseEntitySubscriber } from './../global/subscriber/baseEntitySubscriber';
 import axiosConfig from './axios.config';
 import loggerConfig from './logger.config';
+import socketConfig from './socket.config';
 import * as moment from 'moment';
 
 const redis = {
   port: 6379, // Redis port
-  host: '175.27.158.145', // Redis host
-  password: '153759.Ljx',
+  host: '127.0.0.1', // Redis host
+  // password: '153759.Ljx',
   db: 1,
 };
 
@@ -20,7 +21,7 @@ export default {
   // 修改成你自己独有的key
   keys: 'wulingshan',
   koa: {
-    port: 8001,
+    port: 8091,
   },
   typeorm: {
     dataSource: {
@@ -28,6 +29,7 @@ export default {
       subscribers: [BaseEntitySubscriber],
     },
   },
+  socketIO: socketConfig,
   axios: axiosConfig,
   midwayLogger: loggerConfig,
   bodyParser: {

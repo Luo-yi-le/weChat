@@ -34,6 +34,9 @@ export abstract class BaseEntity {
   })
   updateTime?: Date;
 
+  @Column({ comment: '备注', nullable: true })
+  remark?: string;
+
   // @AfterUpdate()
   // updateTimes() {
   //   this.updateTime = new Date();

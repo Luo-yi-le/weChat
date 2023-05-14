@@ -6,13 +6,13 @@ yarn install
 yarn run dev
 ```
 ### 访问地址
-http://127.0.0.1:8001/
+http://127.0.0.1:8091/
 
 ## Swagger
-http://127.0.0.1:8001/swagger-ui/index.html
+http://127.0.0.1:8091/swagger-ui/index.html
 
 ### Swagger 启动之后
-http://127.0.0.1:8001/swagger-ui/index.json
+http://127.0.0.1:8091/swagger-ui/index.json
 
 #### 修改数据库配置，配置文件位于`src/config/config.local.ts`
 数据库为mysql(`>=5.7版本`)，node版本(`>=12.x`)，首次启动会自动初始化并导入数据

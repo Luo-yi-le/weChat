@@ -1,6 +1,6 @@
 import { Provide } from '@midwayjs/decorator';
 import { NextFunction } from '@midwayjs/koa';
-import { IMidwayWebNext } from '@midwayjs/web';
+// import { IMidwayWebNext } from '@midwayjs/web';
 import { IMiddleware } from '@midwayjs/core';
 import { Context } from 'egg';
 import * as _ from 'lodash';
@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 @Provide()
 export class SwaggerMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
-    return async (ctx: Context, next: IMidwayWebNext) => {
+    return async (ctx: Context, next: NextFunction) => {
       const { url } = ctx;
       await next();
       if (_.startsWith(url, '/swagger-ui/json')) {

@@ -1,14 +1,15 @@
 import { Inject, Provide } from '@midwayjs/decorator';
-import { BaseController, CoolController } from '@cool-midway/core';
+import { CoolController } from '@cool-midway/core';
 import { MailerAdmin } from '../../entities/adminMail';
 import { MailerAdminService } from '../../service/mailerAdminService';
+import { BaseController } from '../../../../global/controller/BaseController';
 
 /**
  * 管理员邮箱账号
  */
 @Provide()
 @CoolController({
-  api: ['add', 'delete', 'update', 'list', 'page'],
+  api: ['add', 'delete', 'update', 'list', 'page', 'info'],
   entity: MailerAdmin,
   service: MailerAdminService,
 })
