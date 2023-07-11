@@ -9,6 +9,7 @@ import { ModuleConfig } from '@cool-midway/core';
  */
 export default () => {
   return {
+    post: '9999',
     // 模块名称
     name: '权限管理',
     // 模块描述

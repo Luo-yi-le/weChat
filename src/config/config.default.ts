@@ -8,6 +8,7 @@ import { BaseEntitySubscriber } from './../global/subscriber/baseEntitySubscribe
 import axiosConfig from './axios.config';
 import loggerConfig from './logger.config';
 import socketConfig from './socket.config';
+import NacosConfig from './nacos.config';
 import * as moment from 'moment';
 
 const redis = {
@@ -53,6 +54,7 @@ export default {
       '.html': 'ejs',
     },
   },
+  nacos: NacosConfig,
   // 本地缓存
   // cache: {
   //   store: fsStore,
@@ -79,6 +81,7 @@ export default {
       },
     },
   },
+  
   // cool配置
   cool: {
     initDB: true,

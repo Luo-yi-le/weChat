@@ -26,5 +26,6 @@ export default {
     }),
     baseLogger: Object.assign({}, logger, { fileLogName: 'baseLogger.log' }),
     taskLogger: Object.assign({}, logger, { fileLogName: 'taskLogger.log' }),
+    coreLogger: Object.assign({}, logger, { fileLogName: 'coreLogger.log' }),
   },
 };

@@ -25,6 +25,8 @@ import * as upload from '@midwayjs/upload';
 // import { QueueService } from '@midwayjs/task';
 import * as socketio from '@midwayjs/socketio';
 import * as task from '@cool-midway/task';
+import * as nacos from './components/nacos/src/index';
+import * as grpc from '@midwayjs/grpc';
 // import * as pay from '@cool-midway/pay';
 // import * as es from '@cool-midway/es';
 // import * as rpc from '@cool-midway/rpc';
@@ -49,12 +51,16 @@ import * as task from '@cool-midway/task';
     cool,
     // 文件上传 阿里云存储 腾讯云存储 七牛云存储
     file,
-    // 导入Http组件
+    // 导入Http组件, 用于远程调用微信官方
     axios,
     redis,
     swagger,
     midwayTask,
     cache,
+    nacos,
+
+    //微服务
+    grpc,
     // upload,
     // 任务与队列
     // task,
@@ -79,7 +85,7 @@ export class ContainerLifeCycle implements ILifeCycle {
   async onConfigLoad(
     container: IMidwayContainer,
     mainApp?: IMidwayBaseApplication<Context>
-  ): Promise<any> {}
+  ): Promise<any> { }
   async onReady(container?: IMidwayContainer) {
     const httpServiceFactory = await container.getAsync(
       axios.HttpServiceFactory
@@ -97,7 +103,7 @@ export class ContainerLifeCycle implements ILifeCycle {
   }
 
   // 应用停止
-  async onStop() {}
+  async onStop() { }
 
   // eslint-disable-next-line prettier/prettier
   async onServerReady(container: IMidwayContainer, app?: IMidwayBaseApplication<Context>): Promise<void> {

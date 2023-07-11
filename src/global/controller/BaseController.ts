@@ -18,7 +18,7 @@ export class BaseController extends Controller {
      * @returns
      */
     async delete(): Promise<{ code: RESCODE; message: RESMESSAGE; }> {
-        const { ids } = this.baseCtx.request.body;
+        const { ids }:any = this.baseCtx.request.body;
         return this.ok(await this.service.delete(ids));
     }
     /**
@@ -34,7 +34,7 @@ export class BaseController extends Controller {
      * @returns
      */
     async page(): Promise<{ code: RESCODE; message: RESMESSAGE; }> {
-        const { body } = this.baseCtx.request;
+        const { body }:any = this.baseCtx.request;
         const setBody = Object.assign({}, body, { page: body.pageNum, size: body.pageSize })
         const res = await this.service.page(setBody, this.curdOption.pageQueryOp, this.connectionName);
         const { page, size, total } = res.pagination
