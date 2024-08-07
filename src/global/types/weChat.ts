@@ -2,7 +2,6 @@
 import { WX_SUBSCRIBE_SCENE } from './../enum/wxEnum';
 
 export namespace IWeChat {
-  class WeChat {}
   export interface ICommon<T = any> {
     [key: string]: T;
   }

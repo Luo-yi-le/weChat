@@ -117,4 +117,8 @@ export class BaseAuthorityMiddleware
       await next();
     };
   }
+
+  static getName(): string {
+    return 'BaseAuthorityMiddleware';
+  }
 }

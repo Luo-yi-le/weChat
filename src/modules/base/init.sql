@@ -1,18 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : cool-admin-next
- Source Server Type    : MySQL
- Source Server Version : 50727
- Source Host           : 139.196.196.203:3306
- Source Schema         : cooladmin
-
- Target Server Type    : MySQL
- Target Server Version : 50727
- File Encoding         : 65001
-
- Date: 10/03/2021 14:04:34
-*/
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

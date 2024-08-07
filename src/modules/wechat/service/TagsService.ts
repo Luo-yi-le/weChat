@@ -3,7 +3,7 @@ import { Context } from '@midwayjs/koa';
 import { WeChatAPI } from '../api/index';
 import { WXTagsEntity } from '../entities/tags';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { getConnection, Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { IMidwayApplication } from '@midwayjs/core';
 import { WXFunsEntity } from './../entities/funs';
 

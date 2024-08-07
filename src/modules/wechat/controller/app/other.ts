@@ -15,5 +15,5 @@ export class WXOtherController extends BaseController {
   async qrcode() {
     const qrcode = await this.otherService.createQrCode();
     return this.ok(qrcode);
-  }
+  }  
 }

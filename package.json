@@ -17,7 +17,7 @@
     "build": "midway-bin build -c",
     "ts-node-test": "node --loader ts-node/esm ./src/global/comm/format/index.ts",
     "lt": "lt --port 8091 --subdomain wulingshan",
-    "generate": "tsproto --path proto --output src/domain"
+    "generate": "tsproto --path ./proto --output ./src/domain"
   },
   "author": "wulingshan",
   "license": "Apache-2.0",
@@ -81,6 +81,7 @@
     "sha1": "^1.1.1",
     "svg-captcha": "^1.4.0",
     "typeorm": "0.2.45",
+    "wechat": "file:",
     "xml2js": "^0.4.23",
     "yaml": "^2.0.0"
   },

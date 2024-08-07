@@ -8,13 +8,13 @@ import { BaseEntitySubscriber } from './../global/subscriber/baseEntitySubscribe
 import axiosConfig from './axios.config';
 import loggerConfig from './logger.config';
 import socketConfig from './socket.config';
-import NacosConfig from './nacos.config';
+// import NacosConfig from './nacos.config';
 import * as moment from 'moment';
 
 const redis = {
-  port: 6379, // Redis port
+  port: 6380, // Redis port
   host: '127.0.0.1', // Redis host
-  // password: '153759.Ljx',
+  password: '123456',
   db: 1,
 };
 
@@ -54,7 +54,7 @@ export default {
       '.html': 'ejs',
     },
   },
-  nacos: NacosConfig,
+  // nacos: NacosConfig,
   // 本地缓存
   // cache: {
   //   store: fsStore,
@@ -81,7 +81,7 @@ export default {
       },
     },
   },
-  
+
   // cool配置
   cool: {
     initDB: true,

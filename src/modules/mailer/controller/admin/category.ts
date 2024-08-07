@@ -1,4 +1,4 @@
-import { Inject, Post, Provide } from '@midwayjs/decorator';
+import { Inject, Provide } from '@midwayjs/decorator';
 import { CoolController } from '@cool-midway/core';
 import { MailerCategoryService } from '../../service/categoryService';
 import { MailerCategory } from '../../entities/category';
@@ -15,5 +15,5 @@ import { BaseController } from '../../../../global/controller/BaseController';
 })
 export class MailerCategoryController extends BaseController {
   @Inject()
-  mailerCategoryService: MailerCategoryService;  
+  mailerCategoryService: MailerCategoryService;
 }

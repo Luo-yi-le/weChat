@@ -26,4 +26,8 @@ export class SwaggerMiddleware implements IMiddleware<Context, NextFunction> {
       }
     };
   }
+
+  static getName(): string {
+    return 'SwaggerMiddleware';
+  }
 }

@@ -38,7 +38,6 @@ export interface IServiceBalancer {
   select(serviceName: string, passingOnly?: boolean): any | never;
 }
 
-
 export interface INacosBalancer {
   /**
    * 根绝策略返回负载均衡器
@@ -46,7 +45,6 @@ export interface INacosBalancer {
    */
   getServiceBalancer(strategy?: string): IServiceBalancer;
 }
-
 
 export interface INacosConfig {
   registry?: ServiceFactoryConfigOption<any>;

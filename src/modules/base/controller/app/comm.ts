@@ -1,6 +1,6 @@
-import { Provide, Inject, Get, Post, App } from '@midwayjs/decorator';
+import { Provide, Inject, Get, Post } from '@midwayjs/decorator';
 import { CoolController, BaseController, CoolEps } from '@cool-midway/core';
-import { Context, Application } from '@midwayjs/koa';
+import { Context } from '@midwayjs/koa';
 import { CoolFile } from '@cool-midway/file';
 /**
  * 不需要登录的后台接口

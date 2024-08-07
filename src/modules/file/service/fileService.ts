@@ -1,11 +1,11 @@
-import { Inject, Provide, App, Files } from '@midwayjs/decorator';
+import { Inject, Provide, App } from '@midwayjs/decorator';
 import { BaseService } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { FileEntities } from '../entities/fileEntities';
 import { Context, Application } from '@midwayjs/koa';
 import { join } from 'path';
-import { existsSync, mkdirSync, writeFile, unlink } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 import { IUpLoad } from '../../../interface';
 /**
  * 文件服务类型
@@ -46,4 +46,6 @@ export class FileService extends BaseService {
       return new Error('文件不能为空！');
     }
   }
+
+  async download() {}
 }

@@ -10,7 +10,7 @@ import { Context } from '@midwayjs/koa';
  * 分类
  */
 @Provide()
-export class IotCategoryService  extends BaseService{
+export class IotCategoryService extends BaseService {
   @InjectEntityModel(IoTCategory)
   ioTCategory: Repository<IoTCategory>;
 

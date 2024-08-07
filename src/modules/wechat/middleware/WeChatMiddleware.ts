@@ -20,4 +20,8 @@ export class WeChatMiddleware implements IMiddleware<Context, NextFunction> {
       await next();
     };
   }
+
+  static getName(): string {
+    return 'WeChatMiddleware';
+  }
 }

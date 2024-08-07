@@ -1,9 +1,6 @@
+import redis from './redis.config';
+
 export default {
-    name: "",
-    redis: {
-        host: "192.168.10.14",
-        password: "",
-        port: 6379,
-        db: 1
-    }
+  name: '',
+  redis: redis,
 };

@@ -17,52 +17,48 @@ export interface INacosBalancer {
   getServiceBalancer(strategy?: string): IServiceBalancer;
 }
 
-
 export interface INacosConfig {
   registry?: ServiceFactoryConfigOption<INacosRegistry>;
   config?: ServiceFactoryConfigOption<INacosConfigClient>;
 }
 
 export interface INacosRegistry {
-  serverList: string | string[],
-  namespace: string,
-  server?: IRegistryServer[]
+  serverList: string | string[];
+  namespace: string;
+  server?: IRegistryServer[];
 }
 
-export type INacosConfigClient = IServerAddr | IConfigClient
+export type INacosConfigClient = IServerAddr | IConfigClient;
 
 export interface IRegistryServer {
-  serviceName: string,
-  instance: Instance,                               //Instance
-  groupName?: string
+  serviceName: string;
+  instance: Instance; //Instance
+  groupName?: string;
 }
 export interface IConfigServer {
-  dataId: string,
-  group: string,
-  content: any,
-  options?: any
+  dataId: string;
+  group: string;
+  content: any;
+  options?: any;
 }
 
 interface Instance {
-  ip: string,                                         //IP of instance
-  port: number,                                       //Port of instance
-  weight?: number,
-  ephemeral?: boolean,
-  clusterName?: string
+  ip: string; //IP of instance
+  port: number; //Port of instance
+  weight?: number;
+  ephemeral?: boolean;
+  clusterName?: string;
 }
 interface IServerAddr {
-  serverAddr: string,
-  server?: IConfigServer[]
-
+  serverAddr: string;
+  server?: IConfigServer[];
 }
 
-
-
 interface IConfigClient {
-  endpoint: string,
-  namespace: string,
-  accessKey: string,
-  secretKey: string,
-  requestTimeout: number,
-  server?: IConfigServer[]
+  endpoint: string;
+  namespace: string;
+  accessKey: string;
+  secretKey: string;
+  requestTimeout: number;
+  server?: IConfigServer[];
 }

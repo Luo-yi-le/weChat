@@ -24,4 +24,9 @@ export class OtherService extends WeChatAPI {
       new Error('刷新微信服务器IP失败： ' + JSON.stringify(res))
     );
   }
+
+  async createQrCode(expire_seconds = 5, action_name = 'QR_SCENE') {
+    const res = await this.getWeChatQrcode(expire_seconds, action_name)
+    return res
+  }
 }

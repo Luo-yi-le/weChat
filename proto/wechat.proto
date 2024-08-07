@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package Wechat;
+
+// 微信服务的定义
+service WechatService {
+    //JS-SDK使用权限签名算法
+    rpc getTicketOfJsApi (RequestReslut) returns (ResponseReslut) {}
+
+    //微信登录
+    rpc weChatLogin (LoginRequest) returns (LoginResponse) {}
+
+    //微信单个用户
+    rpc weChatUserInfo (UserInfoRequest) returns (UserInfoResponse) {}
+
+    // 创建菜单
+    rpc weChatCreateMenu (UserInfoRequest) returns (UserInfoResponse) {}
+
+    //创建二维码
+    rpc WeChatCreateQrcode (RequestReslut) returns (ResponseReslut) {}
+
+    //API接口 IP 即api.weixin.qq.com的解析地址，由开发者调用微信侧的接入IP。 刷新IP
+    rpc WeChatDomainIp (RequestReslut) returns (ResponseReslut) {}
+}
+//通用请求
+message RequestReslut {
+    int32 errcode= 1;
+    string errmsg= 2;
+}
+//通用响应
+message ResponseReslut {
+    int32 errcode= 1;
+    string errmsg= 2;
+}
+
+// 关注渠道枚举
+enum WX_SUBSCRIBE_SCENE {
+  ADD_SCENE_SEARCH = '公众号搜索';
+  ADD_SCENE_ACCOUNT_MIGRATION = '公众号迁移';
+  ADD_SCENE_PROFILE_CARD = '名片分享';
+  ADD_SCENE_QR_CODE = '扫描二维码';
+  ADD_SCENE_PROFILE_LINK = '图文页内名称点击';
+  ADD_SCENE_PROFILE_ITEM = '图文页右上角菜单';
+  ADD_SCENE_PAID = '支付后关注';
+  ADD_SCENE_WECHAT_ADVERTISEMENT = '微信广告';
+  ADD_SCENE_REPRINT = '他人转载';
+  ADD_SCENE_LIVESTREAM = '视频号直播';
+  ADD_SCENE_CHANNELS = '视频号';
+  ADD_SCENE_OTHERS = '其他';
+  CANCEL_SCENE = '取消关注';
+}
+
+// 登录请求参数
+message LoginRequest {
+  string wxAppID = 1;
+  string wxAppSecret = 2;
+  string wxToken = 1;
+}
+
+// 登录响应参数
+message LoginResponse {
+    string access_token = 1;
+    int32 expires_in = 2;
+}
+
+message UserInfoRequest {
+    string openid = 1;
+}
+
+message UserInfoResponse {
+    string subscribe = 1;
+    string openid = 2;
+    string nickname = 3;
+    int32 sex = 4;
+    string language = 5;
+    string city = 6;
+    string province = 7;
+    string country = 8;
+    string headimgurl = 9;
+    number subscribe_time = 10;
+    string remark = 11;
+    string groupid = 12;
+    repeated string tagid_list = 13;
+    WX_SUBSCRIBE_SCENE subscribe_scene =14;
+    string qr_scene = 16;
+    string qr_scene_str = 16;
+}
+
+func getToken( wechat ){}

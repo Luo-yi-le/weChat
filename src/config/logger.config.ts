@@ -1,4 +1,4 @@
-import { IMidwayLogger, MidwayTransformableInfo } from "@midwayjs/logger";
+import { IMidwayLogger, MidwayTransformableInfo } from '@midwayjs/logger';
 
 const logger = {
   maxFiles: '3d',

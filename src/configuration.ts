@@ -21,7 +21,7 @@ import * as swagger from '@midwayjs/swagger';
 import * as axios from '@midwayjs/axios';
 import * as redis from '@midwayjs/redis';
 import * as cache from '@midwayjs/cache';
-import * as upload from '@midwayjs/upload';
+// import * as upload from '@midwayjs/upload';
 // import { QueueService } from '@midwayjs/task';
 import * as socketio from '@midwayjs/socketio';
 import * as task from '@cool-midway/task';
@@ -85,7 +85,7 @@ export class ContainerLifeCycle implements ILifeCycle {
   async onConfigLoad(
     container: IMidwayContainer,
     mainApp?: IMidwayBaseApplication<Context>
-  ): Promise<any> { }
+  ): Promise<any> {}
   async onReady(container?: IMidwayContainer) {
     const httpServiceFactory = await container.getAsync(
       axios.HttpServiceFactory
@@ -103,7 +103,7 @@ export class ContainerLifeCycle implements ILifeCycle {
   }
 
   // 应用停止
-  async onStop() { }
+  async onStop() {}
 
   // eslint-disable-next-line prettier/prettier
   async onServerReady(container: IMidwayContainer, app?: IMidwayBaseApplication<Context>): Promise<void> {
