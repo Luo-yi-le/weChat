@@ -1,5 +1,5 @@
 import { RedisService } from '@midwayjs/redis';
-import { Middleware, IMiddleware, Inject, Logger, IgnoreMatcher } from '@midwayjs/core';
+import { Middleware, IMiddleware, Inject, Logger } from '@midwayjs/core';
 import { NextFunction, Context } from '@midwayjs/koa';
 import { Utils } from '../comm/utils';
 import { BaseSysLogService } from '../modules/base/service/sys/log';
